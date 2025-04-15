@@ -23,7 +23,7 @@ const Layout = () => {
         <>
             <Background />
             <Outlet />
-            <iframe style={{borderRadius: "12px", position: "fixed", bottom: "10px", right: "10px"}} src={`https://open.spotify.com/embed/playlist/${url}?utm_source=generator`} height="152" frameBorder="0" allowFullScreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            <iframe style={{borderRadius: "12px", position: "fixed", top: "10px", right: "10px"}} src={`https://open.spotify.com/embed/playlist/${url}?utm_source=generator`} height="152" frameBorder="0" allowFullScreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
         </>
     )
 }
