@@ -1,0 +1,5 @@
+#start {
+    background-color: grey;
+    height: calc(100vh - 3rem); /* Optional if you want a specific height */
+    width: 100%;
+}
