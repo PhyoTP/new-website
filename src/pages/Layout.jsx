@@ -29,7 +29,11 @@ const Layout = () => {
     const [ intensity, setIntensity ] = useState(0);
     const [ checkWeather, setCheck ] = useState(0);
     useEffect(() => {
-        if (data) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const rain = urlParams.get('rain');
+        if (rain) {
+            setIntensity(rain);
+        }else if (data) {
             switch (data.data.items[0].forecasts[45].forecast){
                 case "Passing Showers":
                     setIntensity(10);
@@ -54,6 +58,7 @@ const Layout = () => {
                     break;
             }
         }
+        console.log(intensity);
     }, [data, checkWeather]);
     const toggleRain = () => {
         if (intensity > 0) {
@@ -62,9 +67,56 @@ const Layout = () => {
             setCheck(checkWeather + 1);
         }
     }
+    function getCookie(cname) {
+        let name = cname + "=";
+        let decodedCookie = decodeURIComponent(document.cookie);
+        let ca = decodedCookie.split(';');
+        for(let i = 0; i <ca.length; i++) {
+          let c = ca[i];
+          while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+          }
+          if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+          }
+        }
+        return "";
+      }
+    const r = document.querySelector(":root")
+    if (getCookie("theme") === "dark") {
+        r.style.setProperty("--background", "#000");
+        r.style.setProperty("--foreground", "#fff");
+        r.style.setProperty("--footer", "#333");
+    }else if (getCookie("theme") === "light") {
+        r.style.setProperty("--background", "#fff");
+        r.style.setProperty("--foreground", "#000");
+        r.style.setProperty("--footer", "#ccc");
+    }
+    const [theme, setTheme] = useState(getCookie("theme") == "light");
+    const toggleTheme = (event) => {
+        const checked = event.target.checked;
+        if (checked) {
+            r.style.setProperty("--background", "#fff");
+            r.style.setProperty("--foreground", "#000");
+            r.style.setProperty("--footer", "#ccc");
+            setTheme(true);
+            document.cookie = "theme=light; path=/";
+        } else {
+            r.style.setProperty("--background", "#000");
+            r.style.setProperty("--foreground", "#fff");
+            r.style.setProperty("--footer", "#333");
+            setTheme(false);
+            document.cookie = "theme=dark; path=/";
+        }
+    }
     return (
         <>
             <header>
+            <label className="switch" aria-label="Change theme">
+                <input type="checkbox" checked={theme} onChange={toggleTheme}/>
+                <span className="slider"></span>
+                <span className="grass"></span>
+            </label>
                 <div className="header">
                     <h1>{singaporeTime}</h1>
                     <p>Singapore time</p>

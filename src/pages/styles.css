@@ -7,27 +7,27 @@
     background-position: center;
 }
 main section{
-    border-top: 1px solid white;
+    border-top: 1px solid var(--foreground);
     padding: 5px;
 }
 a{
-    color: black;
+    color: var(--background);
     text-decoration: none;
     padding: 5px;
-    background-color: white;
-    box-shadow: 10px 5px black, 10px 5px 0 1px white;
+    background-color: var(--foreground);
+    box-shadow: 10px 5px var(--background), 10px 5px 0 1px var(--foreground);
     transition: all 0.3s ease;
 }
 a:hover{
-    background-color: #000;
-    color: #fff;
-    box-shadow: 0 0 0 2px #fff;
+    background-color: var(--background);
+    color: var(--foreground);
+    box-shadow: 0 0 0 2px var(--foreground);
     border-radius: 5px;
 }
 header{
     width: 100%;
     height: 5em;
-    background-color: #000;
+    background-color: var(--background);
     display: flex;
     justify-content: space-between;
 }
@@ -41,7 +41,7 @@ header{
 }
 footer{
     width: 100%;
-    background-color: #333;
+    background-color: var(--footer);
 }
 #rain{
     position: absolute;
@@ -52,12 +52,91 @@ footer{
 button{
     background: none;
     border: none;
-    color: white;
+    color: var(--foreground);
     height: 5em;
     cursor: pointer;
 }
 .icon{
-    margin-top: 1rem;
+    margin-top: 1em;
     height: 100%;
     width: 50%;
 }
+
+/* The switch - the box around the slider */
+.switch {
+    margin: 1.3em 0 0 0.1em;
+    font-size: 17px;
+    position: relative;
+    display: inline-block;
+    width: 3.2em;
+    height: 3.2em;
+    overflow: hidden;
+    transition: .4s;
+    border-radius: 50%;
+    outline: 1px solid #fff;
+  }
+  
+  /* Hide default HTML checkbox */
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  /* The background */
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #000;
+    transition: .4s;
+  }
+  /* circle */
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 3.2em;
+    width: 0.8em;
+    left: 1.2em;
+    top: 0.8em;
+    background-image: url("https://hc-cdn.hel1.your-objectstorage.com/s/v3/f0e7b6804fc15fee57791b1b54d3e6a27a727482_envsprite_full-moon.png"), url("https://hc-cdn.hel1.your-objectstorage.com/s/v3/eb35384bb72ba49513a14569ee75b0945d458279_sun__texture__je1_be1_1_.png");
+    background-size: contain;
+    background-position: top, bottom;
+    background-repeat: no-repeat;
+    transition: .4s;
+  }
+  
+  .switch input:checked + .slider {
+    background-color: #B5D1FF;
+  }
+  
+  .switch input:checked ~ .grass {
+    background-color: #59C93C;
+  }
+  
+  .switch input:checked + .slider:before {
+    transform: translateY(-2.4em);
+  }
+  
+  .switch:hover input:not(:focus) + .slider {
+    background-image: linear-gradient(#2B3141, #A83A05);
+  }
+  
+  .switch:hover input:not(:focus) + .slider:before{
+    transform: translateY(0.8em);
+  }
+  .switch:hover input:checked:not(:focus) + .slider:before{
+    transform: translateY(-1.6em);
+  }
+  .grass{
+    position: absolute;
+    content: "";
+    height: 0.8em;
+    width: 3.2em;
+    left: 0;
+    bottom: 0;
+    background-color: #3E8E2A;
+  }
