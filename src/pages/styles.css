@@ -73,7 +73,7 @@ button{
     overflow: hidden;
     transition: .4s;
     border-radius: 50%;
-    outline: 1px solid #fff;
+    outline: 1px solid var(--foreground);
   }
   
   /* Hide default HTML checkbox */
@@ -124,6 +124,9 @@ button{
   .switch:hover input:not(:focus) + .slider {
     background-image: linear-gradient(#2B3141, #A83A05);
   }
+  .switch:hover input:not(:focus) ~ .grass {
+    background-color: #3E8E2A;
+  }
   
   .switch:hover input:not(:focus) + .slider:before{
     transform: translateY(0.8em);
@@ -138,5 +141,5 @@ button{
     width: 3.2em;
     left: 0;
     bottom: 0;
-    background-color: #3E8E2A;
+    background-color: #1F4715;
   }

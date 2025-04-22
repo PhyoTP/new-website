@@ -35,23 +35,32 @@ const Layout = () => {
             setIntensity(rain);
         }else if (data) {
             switch (data.data.items[0].forecasts[45].forecast){
-                case "Passing Showers":
-                    setIntensity(10);
-                    break;
                 case "Light Showers":
+                    setIntensity(50);
+                    break;
+                case "Passing Showers":
+                    setIntensity(75);
+                    break;
+                case "Light Rain":
                     setIntensity(100);
                     break;
                 case "Showers":
                     setIntensity(200);
                     break;
-                case "Heavy Showers":
-                    setIntensity(400);
+                case "Moderate Rain":
+                    setIntensity(300);
                     break;
-                case "Thundery Showers":
+                case "Heavy Showers":
+                    setIntensity(450);
+                    break;
+                case "Heavy Rain":
                     setIntensity(600);
                     break;
+                case "Thundery Showers":
+                    setIntensity(700);
+                    break;
                 case "Heavy Thundery Showers":
-                    setIntensity(800);
+                    setIntensity(850);
                     break;
                 case "Heavy Thundery Showers with Gusty Winds":
                     setIntensity(1000);
