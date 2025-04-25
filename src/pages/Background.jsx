@@ -12,8 +12,9 @@ const Background = ({ intensity = 80, image }) => {
       startRef.current.style.backgroundImage = `url(${image})`;
     }
   }, [image]);
-
   useEffect(() => {
+    
+    if (intensity > 0) {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
 
@@ -68,8 +69,13 @@ const Background = ({ intensity = 80, image }) => {
       window.removeEventListener("resize", handleResize);
       cancelAnimationFrame(animationFrameRef.current);
     };
+  }else{
+    const canvas = canvasRef.current;
+      const ctx = canvas.getContext("2d");
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      cancelAnimationFrame(animationFrameRef.current);
+  }
   }, [intensity]);
-
   return (
     <div>
       <section id="start" ref={startRef}></section>

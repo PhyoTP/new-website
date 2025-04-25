@@ -8,6 +8,7 @@ import { FiCloudOff, FiCloudRain } from "react-icons/fi";
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
 const Layout = () => {
+    const urlParams = new URLSearchParams(window.location.search);
     const singaporeTime = new Date().toLocaleTimeString("en-SG", {
         timeZone: "Asia/Singapore",
         timeStyle: "short"
@@ -15,7 +16,10 @@ const Layout = () => {
     const currentHour = new Date().getHours();
     let url = "1lsyZ21mPgnfpg9PiTCc2L";
     let image = "";
-    if (currentHour >= 0 && currentHour < 6) {
+    const customImage = urlParams.get('image');
+    if (customImage) {
+        image = `src/assets/${customImage}.jpg`;
+    }else if (currentHour >= 0 && currentHour < 6) {
         url = "3A7cFDnXiSZTzG2NT5P59x"
         image = "src/assets/dusk.jpg";
     } else if (currentHour >= 6 && currentHour < 12) {
@@ -35,7 +39,6 @@ const Layout = () => {
     const [ intensity, setIntensity ] = useState(0);
     const [ checkWeather, setCheck ] = useState(0);
     useEffect(() => {
-        const urlParams = new URLSearchParams(window.location.search);
         const rain = urlParams.get('rain');
         if (rain) {
             setIntensity(rain);
