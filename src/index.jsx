@@ -1,18 +1,18 @@
 import ReactDOM from "react-dom/client";
-import { HashRouter as Router, Route, Routes } from 'react-router-dom'; // Use BrowserRouter if needed
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./pages/Layout";
 import Home from "./pages/Home";
 import "./index.css";
 
 export default function App() {
   return (
-    <Router>
+    <BrowserRouter>
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
         </Route>
       </Routes>
-    </Router>
+    </BrowserRouter>
   );
 }
 

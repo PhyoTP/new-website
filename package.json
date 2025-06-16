@@ -1,5 +1,6 @@
 {
-  "name": "codespaces-react",
+  "homepage": "phyotp.dev",
+  "name": "phyotp",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -23,9 +24,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest",
-    "dev": "vite",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "dev": "vite"
   },
   "eslintConfig": {
     "extends": [
