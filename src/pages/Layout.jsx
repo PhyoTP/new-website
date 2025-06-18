@@ -18,22 +18,22 @@ const Layout = () => {
     let image = "";
     const customImage = urlParams.get('image');
     if (customImage) {
-        image = `src/assets/${customImage}.jpg`;
+        image = `./assets/${customImage}.jpg`;
     }else if (currentHour >= 0 && currentHour < 6) {
         url = "3A7cFDnXiSZTzG2NT5P59x"
-        image = "src/assets/dusk.jpg";
+        image = "./assets/dusk.jpg";
     } else if (currentHour >= 6 && currentHour < 12) {
         url = "4s1d7AhkFUVuf3dMFxQRDj"
-        image = "src/assets/morning.jpg";
+        image = "./assets/morning.jpg";
     } else if (currentHour >= 12 && currentHour < 17) {
         url = "2wQWf33wW5rqzbd6aZ4zD8"
-        image = "src/assets/afternoon.jpg";
+        image = "./assets/afternoon.jpg";
     } else if (currentHour >= 17 && currentHour < 20) {
         url = "1lsyZ21mPgnfpg9PiTCc2L"
-        image = "src/assets/sunset.jpg";
+        image = "./assets/sunset.jpg";
     } else if (currentHour >= 20 && currentHour < 24) {
         url = "4gOJnIGxmZGqQpDEfJzYUu"
-        image = "src/assets/night.jpg";
+        image = "./assets/night.jpg";
     }
     const { data } = useSWR("https://api-open.data.gov.sg/v2/real-time/api/two-hr-forecast", fetcher);
     const [ intensity, setIntensity ] = useState(0);
@@ -85,6 +85,7 @@ const Layout = () => {
             setCheck(checkWeather + 1);
         }
     }
+    //themes
     function getCookie(cname) {
         let name = cname + "=";
         let decodedCookie = decodeURIComponent(document.cookie);
@@ -109,6 +110,16 @@ const Layout = () => {
         r.style.setProperty("--background", "#fff");
         r.style.setProperty("--foreground", "#000");
         r.style.setProperty("--footer", "#ccc");
+    }else {
+        if (currentHour < 6 || currentHour >= 20) {
+            r.style.setProperty("--background", "#000");
+            r.style.setProperty("--foreground", "#fff");
+            r.style.setProperty("--footer", "#333");
+        } else {
+            r.style.setProperty("--background", "#fff");
+            r.style.setProperty("--foreground", "#000");
+            r.style.setProperty("--footer", "#ccc");
+        }
     }
     const [theme, setTheme] = useState(getCookie("theme") == "light");
     const toggleTheme = (event) => {
