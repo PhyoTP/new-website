@@ -31,7 +31,7 @@ const Layout = () => {
         image = "afternoon";
     } else if (currentHour >= 17 && currentHour < 20) {
         url = "1lsyZ21mPgnfpg9PiTCc2L"
-        image = "sunset";
+        image = "evening";
     } else if (currentHour >= 20 && currentHour < 24) {
         url = "4gOJnIGxmZGqQpDEfJzYUu"
         image = "night";
@@ -181,10 +181,15 @@ const Layout = () => {
                     </>
                 )}
             </header>
-            <Background intensity={intensity} image={`./assets/${image}.jpg`}/>
+            <Background intensity={intensity} image={`./assets/${window.innerHeight > window.innerWidth ? "portraitPhotos" : "landscapePhotos"}/${image}.jpg`}/>
             <Outlet />
             <footer>
                 <p>this is a work in progress</p>
+                <nav>
+                    <a href="https://github.com/PhyoTP">My GitHub profile</a>
+                    <a href="https://github.com/PhyoTP/new-website">Star this on GitHub!</a>
+                    <a href="https://bit.ly/ScootPlayz">My YouTube channel</a>
+                </nav>
                 <Buds listId={playlists[image]?.[0]}/>
             </footer>
         </>
