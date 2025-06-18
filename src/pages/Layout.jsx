@@ -2,8 +2,9 @@ import { Outlet, Link } from "react-router-dom";
 import "./styles.css";
 import Background from "./Background";
 import useSWR from "swr";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { FiCloudOff, FiCloudRain } from "react-icons/fi";
+import Buds from "./Buds";
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
@@ -121,7 +122,7 @@ const Layout = () => {
             r.style.setProperty("--footer", "#ccc");
         }
     }
-    const [theme, setTheme] = useState(getCookie("theme") == "light");
+    const [theme, setTheme] = useState(getCookie("theme") == "" ? (currentHour < 6 || currentHour >= 20 ? false : true) : getCookie("theme") === "light");
     const toggleTheme = (event) => {
         const checked = event.target.checked;
         if (checked) {
@@ -138,8 +139,10 @@ const Layout = () => {
             document.cookie = "theme=dark; path=/";
         }
     }
+    
     return (
         <>
+
             <header>
             <label className="switch" aria-label="Change theme">
                 <input type="checkbox" checked={theme} onChange={toggleTheme}/>
@@ -167,7 +170,7 @@ const Layout = () => {
             <footer>
                 <p>this is a work in progress</p>
             </footer>
-            <iframe style={{borderRadius: "12px", position: "fixed", bottom: "10px", right: "10px"}} src={`https://open.spotify.com/embed/playlist/${url}?utm_source=generator`} height="152" frameBorder="0" allowFullScreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            <Buds />
         </>
     )
 }

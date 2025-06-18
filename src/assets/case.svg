@@ -1,0 +1,43 @@
+<svg width="1471" height="1460" viewBox="0 0 1471 1460" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g filter="url(#filter0_ii_6_50)">
+<path d="M1171 0C1336.69 0 1471 134.315 1471 300V1160C1471 1325.69 1336.69 1460 1171 1460H300C134.315 1460 0 1325.69 0 1160V300C0 134.315 134.315 0 300 0H1171Z" fill="#D31F00"/>
+</g>
+<circle cx="774" cy="1170" r="80" transform="rotate(90 774 1170)" stroke="#C6634E" stroke-width="20"/>
+<circle cx="1162" cy="1170" r="80" transform="rotate(90 1162 1170)" fill="#C6634E" stroke="#C6634E" stroke-width="20"/>
+<circle cx="895.5" cy="1123.5" r="12" transform="rotate(90 895.5 1123.5)" fill="#C6634E" stroke="#C6634E"/>
+<circle cx="945.5" cy="1123.5" r="12" transform="rotate(90 945.5 1123.5)" fill="#C6634E" stroke="#C6634E"/>
+<circle cx="993.5" cy="1123.5" r="12" transform="rotate(90 993.5 1123.5)" fill="#C6634E" stroke="#C6634E"/>
+<circle cx="993.5" cy="1166.5" r="12" transform="rotate(90 993.5 1166.5)" fill="#C6634E" stroke="#C6634E"/>
+<circle cx="993.5" cy="1209.5" r="12" transform="rotate(90 993.5 1209.5)" fill="#C6634E" stroke="#C6634E"/>
+<circle cx="945.5" cy="1209.5" r="12" transform="rotate(90 945.5 1209.5)" fill="#C6634E" stroke="#C6634E"/>
+<circle cx="945.5" cy="1166.5" r="12" transform="rotate(90 945.5 1166.5)" fill="#C6634E" stroke="#C6634E"/>
+<circle cx="895.5" cy="1166.5" r="12" transform="rotate(90 895.5 1166.5)" fill="#C6634E" stroke="#C6634E"/>
+<circle cx="895.5" cy="1209.5" r="12" transform="rotate(90 895.5 1209.5)" fill="#C6634E" stroke="#C6634E"/>
+<circle cx="920.5" cy="1243.5" r="12" transform="rotate(90 920.5 1243.5)" fill="#C6634E" stroke="#C6634E"/>
+<circle cx="967.5" cy="1243.5" r="12" transform="rotate(90 967.5 1243.5)" fill="#C6634E" stroke="#C6634E"/>
+<circle cx="1017.5" cy="1243.5" r="12" transform="rotate(90 1017.5 1243.5)" fill="#C6634E" stroke="#C6634E"/>
+<circle cx="1039.5" cy="1209.5" r="12" transform="rotate(90 1039.5 1209.5)" fill="#C6634E" stroke="#C6634E"/>
+<circle cx="1039.5" cy="1166.5" r="12" transform="rotate(90 1039.5 1166.5)" fill="#C6634E" stroke="#C6634E"/>
+<circle cx="1039.5" cy="1123.5" r="12" transform="rotate(90 1039.5 1123.5)" fill="#C6634E" stroke="#C6634E"/>
+<circle cx="1017.5" cy="1089.5" r="12" transform="rotate(90 1017.5 1089.5)" fill="#C6634E" stroke="#C6634E"/>
+<circle cx="967.5" cy="1089.5" r="12" transform="rotate(90 967.5 1089.5)" fill="#C6634E" stroke="#C6634E"/>
+<circle cx="920.5" cy="1089.5" r="12" transform="rotate(90 920.5 1089.5)" fill="#C6634E" stroke="#C6634E"/>
+<defs>
+<filter id="filter0_ii_6_50" x="-50" y="-50" width="1571" height="1560" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dx="-50" dy="50"/>
+<feGaussianBlur stdDeviation="25"/>
+<feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0.447059 0 0 0 0 0.137255 0 0 0 0 0.121569 0 0 0 1 0"/>
+<feBlend mode="normal" in2="shape" result="effect1_innerShadow_6_50"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dx="50" dy="-50"/>
+<feGaussianBlur stdDeviation="25"/>
+<feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0.941176 0 0 0 0 0.478431 0 0 0 0 0.45098 0 0 0 1 0"/>
+<feBlend mode="normal" in2="effect1_innerShadow_6_50" result="effect2_innerShadow_6_50"/>
+</filter>
+</defs>
+</svg>

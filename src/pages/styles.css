@@ -153,3 +153,45 @@ header *{
     bottom: 0;
     background-color: #1F4715;
   }
+
+  /* earbuds */
+
+
+#buds {
+  --rs: calc(30vmin / 1460);
+  height: 30vmin;
+  width: calc(1471 * var(--rs));
+  border-radius: calc(300 * var(--rs));
+  overflow: hidden;
+  filter: drop-shadow(
+    calc(50 * var(--rs)) calc(-50 * var(--rs)) calc(50 * var(--rs)) rgba(0,0,0,0.5)
+  );
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  touch-action: none;
+  user-select: none;
+  cursor: grab;
+}
+
+#case {
+  position: absolute;
+  height: 30vmin;
+  width: calc(1471 * var(--rs));
+}
+
+#dial {
+  --spin: 0deg;
+  position: absolute;
+  height: calc(620 * var(--rs));
+  width: calc(620 * var(--rs));
+  left: calc(-10 * var(--rs));
+  top: calc(-10 * var(--rs));
+  transition: transform 0.1s ease-in;
+  transform: rotate(var(--spin));
+}
+@keyframes click{
+  0% {transform: scale(1,1) rotate(var(--spin));}
+  50% {transform: scale(0.9,0.9) rotate(var(--spin));}
+  100% {transform: scale(1,1) rotate(var(--spin));}
+}
