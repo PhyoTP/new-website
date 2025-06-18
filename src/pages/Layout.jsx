@@ -19,22 +19,22 @@ const Layout = () => {
     let image = "";
     const customImage = urlParams.get('image');
     if (customImage) {
-        image = `./assets/${customImage}.jpg`;
+        image = customImage;
     }else if (currentHour >= 0 && currentHour < 6) {
         url = "3A7cFDnXiSZTzG2NT5P59x"
-        image = "./assets/dusk.jpg";
+        image = "dusk";
     } else if (currentHour >= 6 && currentHour < 12) {
         url = "4s1d7AhkFUVuf3dMFxQRDj"
-        image = "./assets/morning.jpg";
+        image = "morning";
     } else if (currentHour >= 12 && currentHour < 17) {
         url = "2wQWf33wW5rqzbd6aZ4zD8"
-        image = "./assets/afternoon.jpg";
+        image = "afternoon";
     } else if (currentHour >= 17 && currentHour < 20) {
         url = "1lsyZ21mPgnfpg9PiTCc2L"
-        image = "./assets/sunset.jpg";
+        image = "sunset";
     } else if (currentHour >= 20 && currentHour < 24) {
         url = "4gOJnIGxmZGqQpDEfJzYUu"
-        image = "./assets/night.jpg";
+        image = "night";
     }
     const { data } = useSWR("https://api-open.data.gov.sg/v2/real-time/api/two-hr-forecast", fetcher);
     const [ intensity, setIntensity ] = useState(0);
@@ -139,7 +139,23 @@ const Layout = () => {
             document.cookie = "theme=dark; path=/";
         }
     }
-    
+    const playlists = {
+        "morning": [
+            "PLX9tuOzNhuWMWTY7x4FtB7tDACYjLRkrs"
+        ],
+        "afternoon": [
+            "PLX9tuOzNhuWM2w1_yK0fSTrIqQrke61Ac"
+        ],
+        "sunset": [
+            "PLX9tuOzNhuWOAtTdn8YcR2kTILtcSfQ71"
+        ],
+        "night": [
+            "PLX9tuOzNhuWNYt90Z3N8xqHwHlrgDh_xf"
+        ],
+        "dusk": [
+            "PLX9tuOzNhuWPvfNEpgeBD4UBCNAKPXJ9h"
+        ]
+    }
     return (
         <>
 
@@ -165,12 +181,12 @@ const Layout = () => {
                     </>
                 )}
             </header>
-            <Background intensity={intensity} image={image}/>
+            <Background intensity={intensity} image={`./assets/${image}.jpg`}/>
             <Outlet />
             <footer>
                 <p>this is a work in progress</p>
+                <Buds listId={playlists[image]?.[0]}/>
             </footer>
-            <Buds />
         </>
     )
 }
