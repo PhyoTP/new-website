@@ -15,26 +15,20 @@ const Layout = () => {
         timeStyle: "short"
       });
     const currentHour = new Date().getHours();
-    let url = "1lsyZ21mPgnfpg9PiTCc2L";
-    let image = "";
-    const customImage = urlParams.get('image');
-    if (customImage) {
-        image = customImage;
+    let time = "";
+    const customTime = urlParams.get('time');
+    if (customTime) {
+        time = customTime;
     }else if (currentHour >= 0 && currentHour < 6) {
-        url = "3A7cFDnXiSZTzG2NT5P59x"
-        image = "dusk";
+        time = "dusk";
     } else if (currentHour >= 6 && currentHour < 12) {
-        url = "4s1d7AhkFUVuf3dMFxQRDj"
-        image = "morning";
+        time = "morning";
     } else if (currentHour >= 12 && currentHour < 17) {
-        url = "2wQWf33wW5rqzbd6aZ4zD8"
-        image = "afternoon";
+        time = "afternoon";
     } else if (currentHour >= 17 && currentHour < 20) {
-        url = "1lsyZ21mPgnfpg9PiTCc2L"
-        image = "evening";
+        time = "evening";
     } else if (currentHour >= 20 && currentHour < 24) {
-        url = "4gOJnIGxmZGqQpDEfJzYUu"
-        image = "night";
+        time = "night";
     }
     const { data } = useSWR("https://api-open.data.gov.sg/v2/real-time/api/two-hr-forecast", fetcher);
     const [ intensity, setIntensity ] = useState(0);
@@ -103,24 +97,18 @@ const Layout = () => {
         return "";
       }
     const r = document.querySelector(":root")
-    if (getCookie("theme") === "dark") {
+    let currentTheme = getCookie("theme");
+    if (currentTheme === "") {
+        currentTheme = (currentHour < 6 || currentHour >= 20) ? "dark" : "light";
+    }
+    if (currentTheme === "dark") {
         r.style.setProperty("--background", "#000");
         r.style.setProperty("--foreground", "#fff");
         r.style.setProperty("--footer", "#333");
-    }else if (getCookie("theme") === "light") {
+    }else if (currentTheme === "light") {
         r.style.setProperty("--background", "#fff");
         r.style.setProperty("--foreground", "#000");
         r.style.setProperty("--footer", "#ccc");
-    }else {
-        if (currentHour < 6 || currentHour >= 20) {
-            r.style.setProperty("--background", "#000");
-            r.style.setProperty("--foreground", "#fff");
-            r.style.setProperty("--footer", "#333");
-        } else {
-            r.style.setProperty("--background", "#fff");
-            r.style.setProperty("--foreground", "#000");
-            r.style.setProperty("--footer", "#ccc");
-        }
     }
     const [theme, setTheme] = useState(getCookie("theme") == "" ? (currentHour < 6 || currentHour >= 20 ? false : true) : getCookie("theme") === "light");
     const toggleTheme = (event) => {
@@ -130,12 +118,14 @@ const Layout = () => {
             r.style.setProperty("--foreground", "#000");
             r.style.setProperty("--footer", "#ccc");
             setTheme(true);
+            currentTheme = "light";
             document.cookie = "theme=light; path=/";
         } else {
             r.style.setProperty("--background", "#000");
             r.style.setProperty("--foreground", "#fff");
             r.style.setProperty("--footer", "#333");
             setTheme(false);
+            currentTheme = "dark";
             document.cookie = "theme=dark; path=/";
         }
     }
@@ -181,16 +171,47 @@ const Layout = () => {
                     </>
                 )}
             </header>
-            <Background intensity={intensity} image={`./assets/${window.innerHeight > window.innerWidth ? "portraitPhotos" : "landscapePhotos"}/${image}.jpg`}/>
+            <Background intensity={intensity} image={`./assets/${window.innerHeight > window.innerWidth ? "portraitPhotos" : "landscapePhotos"}/${time}.jpg`}/>
             <Outlet />
             <footer>
                 <p>this is a work in progress</p>
+                <hr />
                 <nav>
                     <a href="https://github.com/PhyoTP">My GitHub profile</a>
                     <a href="https://github.com/PhyoTP/new-website">Star this on GitHub!</a>
                     <a href="https://bit.ly/ScootPlayz">My YouTube channel</a>
                 </nav>
-                <Buds listId={playlists[image]?.[0]}/>
+                <hr/>
+                <Buds listId={playlists[time]?.[0]}/>
+                <hr/>
+                <p>by the way you see that {currentTheme === "dark" ? "moon" : "sun"} thing in the top left corner, that's a theme switcher you should try clicking on it</p>
+                { intensity > 0 && (
+                    <p>and also the clouds in the right hand corner toggle rain (if its affecting performance)</p>
+                )}
+                <hr/>
+                <h2>some more stuff you could change about this website:</h2>
+                <label htmlFor="time">Change the time of day:</label>
+                <select id="time" onChange={(e) => {
+                    const newTime = e.target.value;
+                    const url = new URL(window.location.href);
+                    url.searchParams.set('time', newTime);
+                    window.location.href = url.toString();
+                }} value={time}>
+                    <option value="morning">Morning</option>
+                    <option value="afternoon">Afternoon</option>
+                    <option value="evening">Evening</option>
+                    <option value="night">Night</option>
+                    <option value="dusk">Dusk</option>
+                </select>
+                <br />
+                <label htmlFor="rainChange">Change the rain intensity:</label>
+                <input type="number" id="rainChange" min="0"/>
+                <input type="submit" value="Change" onClick={() => {
+                    const newRain = document.getElementById("rainChange").value;
+                    const url = new URL(window.location.href);
+                    url.searchParams.set('rain', newRain);
+                    window.location.href = url.toString();
+                }}/>
             </footer>
         </>
     )

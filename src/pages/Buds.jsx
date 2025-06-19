@@ -193,12 +193,12 @@ export default function Buds({listId}) {
                 <img src={Case} id="case" />
                 <img src={Dial} id="dial" ref={dialRef} />
             </div>
-            <h1>Buds</h1>
+            <h2>Buds</h2>
             <p>Click the dial to play/pause, scroll or swipe to adjust volume</p>
 
             {!ready && <p>Loading...</p>}
             {ready && (
-                <div style={{ marginTop: '10px', fontSize: '14px' }}>
+                <div>
                     <p>Status: {isPlaying ? 'Playing' : 'Paused'}</p>
                     <p>Volume: {volume}%</p>
                     <p>Click to play/pause, scroll to adjust volume</p>
