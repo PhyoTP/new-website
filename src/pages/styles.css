@@ -45,8 +45,10 @@ header{
     padding: 0 1rem 0 1rem;
 }
 footer{
-    width: 100%;
     background-color: var(--footer);
+    padding: 1em;
+    margin-top: 1em;
+    width: calc(100%-2em);
 }
 #rain{
     position: absolute;

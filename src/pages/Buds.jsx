@@ -11,6 +11,8 @@ export default function Buds({listId}) {
     const budsRef = useRef(null);
     const [volume, setVolume] = useState(50);
     const [currentTitle, setCurrentTitle] = useState("");
+    const clickCountRef = useRef(0);
+    const [progress, setProgress] = useState(0); // 0 to 100
     
     // Use ref to store current volume for event handlers
     const volumeRef = useRef(volume);
@@ -51,6 +53,18 @@ export default function Buds({listId}) {
             setIsPlaying(false);
         }
     }, [ready]);
+    const next = useCallback(() => {
+        if (playerRef.current && ready) {
+            playerRef.current.nextVideo();
+            setIsPlaying(true);
+        }
+    }, [ready]);
+    const previous = useCallback(() => {
+        if (playerRef.current && ready) {
+            playerRef.current.previousVideo();
+            setIsPlaying(true);
+        }
+    }, [ready]);
 
     // Load YouTube IFrame API
     useEffect(() => {
@@ -75,7 +89,9 @@ export default function Buds({listId}) {
                     controls: 0,
                     modestbranding: 1,
                     rel: 0,
-                    shuffle: 1 // <-- Enable shuffle
+                    shuffle: 1,
+                    loop: 1,
+                    enablejsapi: 1
                 },
                 events: {
                     onReady: (event) => {
@@ -115,19 +131,39 @@ export default function Buds({listId}) {
 
         if (!dial || !buds) return;
 
+
         const handleClick = () => {
-            if (isPlaying) {
-                pause();
-                console.log("Pause");
-            } else {
-                play();
-                console.log("Play");
-            }
             dial.style.animation = "click 0.1s";
             setTimeout(() => {
                 dial.style.animation = "";
             }, 100);
+
+            clickCountRef.current += 1;
+            console.log("Clicks:", clickCountRef.current);
+
+            setTimeout(() => {
+                const count = clickCountRef.current;
+
+                if (count === 2) {
+                    next();
+                    console.log("Next");
+                } else if (count === 3) {
+                    previous();
+                    console.log("Previous");
+                } else if (count === 1) {
+                    if (isPlaying) {
+                        pause();
+                        console.log("Paused");
+                    } else {
+                        play();
+                        console.log("Playing");
+                    }
+                }
+
+                clickCountRef.current = 0;
+            }, 500);
         };
+
 
         const handleWheel = (event) => {
             event.preventDefault();
@@ -183,6 +219,23 @@ export default function Buds({listId}) {
             buds.removeEventListener("touchend", handleTouchEnd);
         };
     }, [isPlaying, increaseVolume, decreaseVolume, play, pause]);
+    useEffect(() => {
+        let interval = null;
+
+        if (ready) {
+            interval = setInterval(() => {
+            const current = playerRef.current?.getCurrentTime?.();
+            const duration = playerRef.current?.getDuration?.();
+
+            if (current && duration) {
+                const percent = (current / duration) * 100;
+                setProgress(percent);
+            }
+            }, 1000); // update every second
+        }
+
+        return () => clearInterval(interval);
+    }, [ready]);
 
     return (
         <div>
@@ -202,7 +255,24 @@ export default function Buds({listId}) {
                     <p>Status: {isPlaying ? 'Playing' : 'Paused'}</p>
                     <p>Volume: {volume}%</p>
                     <p>Click to play/pause, scroll to adjust volume</p>
+                    <p>Double click to next video, triple click to the video before</p>
                     <p>Now Playing: {currentTitle}</p>
+                    <input
+                        type="range"
+                        min="0"
+                        max="100"
+                        value={progress}
+                        onChange={(e) => {
+                            const percent = parseFloat(e.target.value);
+                            const duration = playerRef.current?.getDuration?.();
+                            if (duration) {
+                            const seekTo = (percent / 100) * duration;
+                            playerRef.current?.seekTo(seekTo, true);
+                            setProgress(percent);
+                            }
+                        }}
+                    />
+                    <p>{Math.floor(progress/100*playerRef.current?.getDuration?.()/60)}:{Math.floor(progress/100*playerRef.current?.getDuration?.()%60) < 10 && "0"}{Math.floor(progress/100*playerRef.current?.getDuration?.()%60)} / {Math.floor(playerRef.current?.getDuration?.()/60)}:{Math.floor(playerRef.current?.getDuration?.()%60) < 10 && "0"}{Math.floor(playerRef.current?.getDuration?.()%60)}</p>
                 </div>
             )}
         </div>
