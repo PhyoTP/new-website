@@ -1,4 +1,4 @@
-import { Outlet, Link } from "react-router-dom";
+import { Outlet, Link, useSearchParams } from "react-router-dom";
 import "./styles.css";
 import Background from "./Background";
 import useSWR from "swr";
@@ -9,7 +9,7 @@ import Buds from "./Buds";
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
 const Layout = () => {
-    const urlParams = new URLSearchParams(window.location.search);
+    const [urlParams, setParams] = useSearchParams();
     const singaporeTime = new Date().toLocaleTimeString("en-SG", {
         timeZone: "Asia/Singapore",
         timeStyle: "short"
@@ -182,7 +182,7 @@ const Layout = () => {
                     <a href="https://bit.ly/ScootPlayz">My YouTube channel</a>
                 </nav>
                 <hr/>
-                <Buds listId={playlists[time]?.[0]}/>
+                <Buds listId={urlParams.get("playlist") || playlists[time]?.[0]}/>
                 <hr/>
                 <p>by the way you see that {currentTheme === "dark" ? "moon" : "sun"} thing in the top left corner, that's a theme switcher you should try clicking on it</p>
                 { intensity > 0 && (
@@ -193,9 +193,11 @@ const Layout = () => {
                 <label htmlFor="time">Change the time of day:</label>
                 <select id="time" onChange={(e) => {
                     const newTime = e.target.value;
-                    const url = new URL(window.location.href);
-                    url.searchParams.set('time', newTime);
-                    window.location.href = url.toString();
+                    setParams(prev => {
+                    const newParams = new URLSearchParams(prev);
+                    newParams.set('time', newTime);
+                    return newParams;
+                    });
                 }} value={time}>
                     <option value="morning">Morning</option>
                     <option value="afternoon">Afternoon</option>
@@ -211,6 +213,17 @@ const Layout = () => {
                     const url = new URL(window.location.href);
                     url.searchParams.set('rain', newRain);
                     window.location.href = url.toString();
+                }}/>
+                <br />
+                <label htmlFor="playlistChange">Change the YouTube playlist:</label>
+                <input type="number" id="playlistChange" min="0"/>
+                <input type="submit" value="Change" onClick={() => {
+                    const newList = document.getElementById("playlistChange").value;
+                    setParams(prev => {
+                    const newParams = new URLSearchParams(prev);
+                    newParams.set('playlist', newList);
+                    return newParams;
+                    });
                 }}/>
             </footer>
         </>
