@@ -217,7 +217,7 @@ const Layout = () => {
                 <br />
                 <label htmlFor="playlistChange">Change the YouTube playlist:</label>
                 <input type="number" id="playlistChange" min="0"/>
-                <input type="submit" value="playlistChange" onClick={() => {
+                <input type="submit" value="Change" onClick={() => {
                     const newList = document.getElementById("playlistChange").value;
                     setParams(prev => {
                     const newParams = new URLSearchParams(prev);
