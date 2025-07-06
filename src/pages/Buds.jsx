@@ -119,7 +119,7 @@ export default function Buds({listId}) {
                 playerRef.current.destroy();
             }
         };
-    }, []);
+    }, [listId]);
 
     // Handle dial interactions
     useEffect(() => {

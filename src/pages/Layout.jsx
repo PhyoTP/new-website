@@ -209,13 +209,10 @@ const Layout = () => {
                 <label htmlFor="rainChange">Change the rain intensity:</label>
                 <input type="number" id="rainChange" min="0"/>
                 <input type="submit" value="Change" onClick={() => {
-                    const newRain = document.getElementById("rainChange").value;
-                    const url = new URL(window.location.href);
-                    url.searchParams.set('rain', newRain);
-                    window.location.href = url.toString();
+                    setIntensity(document.getElementById("rainChange").value);
                 }}/>
                 <br />
-                <label htmlFor="playlistChange">Change the YouTube playlist:</label>
+                <label htmlFor="playlistChange">Set a YouTube playlist:</label>
                 <input id="playlistChange"/>
                 <input type="submit" value="Change" onClick={() => {
                     const newList = document.getElementById("playlistChange").value;
