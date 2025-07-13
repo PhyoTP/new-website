@@ -30,7 +30,7 @@ const Layout = () => {
     } else if (currentHour >= 20 && currentHour < 24) {
         time = "night";
     }
-    const { data } = useSWR("https://api-open.data.gov.sg/v2/real-time/api/two-hr-forecast", fetcher);
+    const { data, loading, error } = useSWR("https://api-open.data.gov.sg/v2/real-time/api/two-hr-forecast", fetcher);
     const [ intensity, setIntensity ] = useState(0);
     const [ checkWeather, setCheck ] = useState(0);
     useEffect(() => {
@@ -162,7 +162,7 @@ const Layout = () => {
                 {data && (
                     <>
                     <div className="header">
-                        <h1>{data.data.items[0].forecasts[45].forecast}</h1>
+                        <h1>{data.data.items[0].forecasts[45].forecast || "just go outside"}</h1>
                         <p>Woodlands, Singapore</p>
                     </div>
                     <button onClick={toggleRain}>{
