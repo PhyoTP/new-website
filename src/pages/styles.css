@@ -219,8 +219,17 @@ nav{
   width: 100%;
 }
 .neofetch img{
-  width: calc(95vw - 250px);
+  width: calc(95vw - 350px);
   max-width: 512px;
   height: auto;
   margin-top: 1em;
+}
+.terminal input{
+  background: none;
+  border: none;
+  color: var(--foreground);
+  outline: none;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1em;
+  width: calc(100% - 15ch);
 }

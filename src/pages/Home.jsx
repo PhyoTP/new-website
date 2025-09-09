@@ -1,51 +1,94 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import me from "../assets/me.png";
 
 const Home = () => {
-  const terminalRef = useRef(null);
   const [index, setIndex] = useState(0);
+  const [text, setText] = useState("");
+  const inputRef = useRef(null);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (terminalRef.current) {
         if (index < "neofetch".length) {
-          terminalRef.current.innerHTML += "neofetch"[index];
+          setText((prev) => prev + "neofetch"[index]);
           setIndex((prev) => prev + 1); // use updater function
         } else {
           clearInterval(interval);
         }
-      }
     }, 200);
 
     return () => clearInterval(interval); // cleanup
   }, [index]); // depend on index so it updates correctly
-
+  useEffect(() => {
+    if (inputRef.current) {
+        inputRef.current.focus();
+    }
+  }, [text]);
   return (
     <main>
       <h1>PhyoTP&apos;s personal corner of the internet</h1>
-      <p className="terminal" ref={terminalRef}>
-        <b>phyotp.dev</b>:~${" "}
-      </p>
+      <p className="terminal"><b>phyotp.dev</b>:~$ {text}</p>
       {index === "neofetch".length && (
-        <div className="neofetch">
-          <img src={me} />
-          <div className="terminal">
-            <p>
-              <b>Hi! I&apos;m Phyo Thet Pai</b>
-            </p>
-            <p>------------------------------------</p>
-            <p><b>Also known as:</b> TheAveragePi</p>
-            <p><b>Living in:</b> Singapore</p>
-            <p><b>IRL Languages:</b> English, Chinese, Burmese, Japanese</p>
-            <p><b>Hobbies:</b> Coding, Photography, Scooters, Gaming</p>
-            <p><b>I make:</b> Apps, Games, Websites</p>
-            <p><b>Favourite Projects:</b> <a href="https://multicards.phyotp.dev">Multicards</a><a href="https://app.swiftinsg.org/Academ">Academ</a></p>
-
-          </div>
-        </div>
+        <>
+            <Output text={text}/>
+            <p className="terminal"><b>phyotp.dev</b>:~$ <input type="text" ref={inputRef} onKeyDown={(e) => {
+                if(e.key === "Enter"){
+                    setText(inputRef.current.value);
+                    inputRef.current.value = "";
+                }
+            }}/></p>
+        </>
       )}
     </main>
   );
 };
 
 export default Home;
+
+const Output = (props) => {
+    if (props.text === "neofetch"){
+        return (
+            <div className="neofetch">
+                <img src={me} />
+                <div className="terminal">
+                    <p>
+                    <b>Hi! I&apos;m Phyo Thet Pai</b>
+                    </p>
+                    <p>------------------------------------</p>
+                    <p><b>Also known as:</b> TheAveragePi</p>
+                    <p><b>Living in:</b> Singapore</p>
+                    <p><b>IRL Languages:</b> English, Chinese, Burmese, Japanese</p>
+                    <p><b>Hobbies:</b> Coding, Photography, Scooters, Gaming</p>
+                    <p><b>I make:</b> Apps, Games, Websites</p>
+                    <p><b>Favourite Project:</b> <a href="https://multicards.phyotp.dev">Multicards</a></p>
+                    <p>------------------------------------</p>
+                    <p><b>Commands:</b> neofetch, apps, websites, games</p>
+                </div>
+            </div>
+        )
+    }else if (props.text === "apps") {
+        return (
+            <nav>
+                <a href="https://multicards.phyotp.dev">Multicards</a>
+                <a href="https://app.swiftinsg.org/Academ">Academ</a>
+            </nav>
+        )
+    }else if (props.text === "websites") {
+        return (
+            <nav>
+                <a href="https://multicards.phyotp.dev">Multicards</a>
+                <a href="https://auth.phyotp.dev">PhyoID</a>
+                <a href="https://phyotp.dev">This one</a>
+                <a href="https://phyotp.github.io">Old website</a>
+                <a href="https://phyotp.github.io/5k1b1d1">5k1d1b1</a>
+                <a href="https://phyotp.github.io/ArcOnline">ArcOnline</a>
+            </nav>
+        )
+    }else if (props.text === "games") {
+        return (
+            <nav>
+                <a href="https://phyotp.itch.io/Bouncer">Bouncer</a>
+                <a href="https://www.roblox.com/share?code=c24371b39f9de146a3183c7205141a2d&type=ExperienceDetails&stamp=1718626359965">Find the Code Langs</a>
+            </nav>
+        )
+    }
+}
