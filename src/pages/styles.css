@@ -221,7 +221,8 @@ nav{
 .neofetch img{
   width: calc(95vw - 350px);
   max-width: 512px;
-  height: auto;
+  height: calc(95vw - 350px);
+  max-height: 512px;
   margin-top: 1em;
 }
 .terminal input{

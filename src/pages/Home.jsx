@@ -1,31 +1,36 @@
 import { useEffect, useState, useRef } from "react";
+import { useSearchParams } from "react-router-dom";
 import me from "../assets/me.png";
 
 const Home = () => {
   const [index, setIndex] = useState(0);
   const [text, setText] = useState("");
   const inputRef = useRef(null);
+  const [urlParams, setParams] = useSearchParams();
 
   useEffect(() => {
-    const interval = setInterval(() => {
-        if (index < "neofetch".length) {
-          setText((prev) => prev + "neofetch"[index]);
-          setIndex((prev) => prev + 1); // use updater function
-        } else {
-          clearInterval(interval);
-        }
-    }, 200);
+    if (!urlParams.get("command")){
+        const interval = setInterval(() => {
+            if (index < "neofetch".length) {
+            setText((prev) => prev + "neofetch"[index]);
+            setIndex((prev) => prev + 1); // use updater function
+            } else {
+            clearInterval(interval);
+            }
+        }, 200);
 
-    return () => clearInterval(interval); // cleanup
-  }, [index]); // depend on index so it updates correctly
-  useEffect(() => {
-    if (inputRef.current) {
-        inputRef.current.focus();
+        return () => clearInterval(interval); // cleanup
+    } else {
+        setText(urlParams.get("command"));
+        setIndex("neofetch".length);
     }
-  }, [text]);
+  }, [index]); // depend on index so it updates correctly
+  
   return (
     <main>
-      <h1>PhyoTP&apos;s personal corner of the internet</h1>
+      {!urlParams.get("command") &&
+        <h1>PhyoTP&apos;s personal corner of the internet</h1>
+      }
       <p className="terminal"><b>phyotp.dev</b>:~$ {text}</p>
       {index === "neofetch".length && (
         <>
@@ -61,7 +66,8 @@ const Output = (props) => {
                     <p><b>I make:</b> Apps, Games, Websites</p>
                     <p><b>Favourite Project:</b> <a href="https://multicards.phyotp.dev">Multicards</a></p>
                     <p>------------------------------------</p>
-                    <p><b>Commands:</b> neofetch, apps, websites, games</p>
+                    <p><b>Commands:</b> neofetch, apps, websites, games, q</p>
+                    <p>Run <b>help</b> to see more info on commands.</p>
                 </div>
             </div>
         )
@@ -89,6 +95,42 @@ const Output = (props) => {
                 <a href="https://phyotp.itch.io/Bouncer">Bouncer</a>
                 <a href="https://www.roblox.com/share?code=c24371b39f9de146a3183c7205141a2d&type=ExperienceDetails&stamp=1718626359965">Find the Code Langs</a>
             </nav>
+        )
+    }else if (props.text === "help") {
+        return (
+            <div className="terminal">
+                <p><b>Commands:</b></p>
+                <p><b>neofetch</b> - Display info about me</p>
+                <p><b>help</b> - Show this help message</p>
+                <p><b>apps</b> - See apps I&apos;ve made</p>
+                <p><b>websites</b> - See websites I&apos;ve made</p>
+                <p><b>games</b> - See games I&apos;ve made</p>
+                <p><b>q</b> - Quick links</p>
+            </div>
+        )
+    }else if (props.text === "q") {
+        return (
+            <nav>
+                <a href="https://youtube.com/?authuser=1">YouTube</a>
+                <a href="https://hackclub.slack.com">Slack</a>
+                <a href="https://web.whatsapp.com">WhatsApp</a>
+                <a href="https://chatgpt.com">ChatGPT</a>
+                <a href="https://github.com">GitHub</a>
+                <a href="https://mail.google.com/mail/u/0/#inbox">Gmail</a>
+                <a href="https://notion.so">Notion</a>
+                <a href="https://instagram.com">Instagram</a>
+                <a href="https://classroom.google.com/u/0/h">Google Classroom</a>
+            </nav>
+        )
+
+    }else if (props.text.trim() === "") {
+        return null;
+    }else {
+        return (
+            <div className="terminal">
+                <p>Command not found: {props.text}</p>
+                <p>Run <b>help</b> to see available commands.</p>
+            </div>
         )
     }
 }
