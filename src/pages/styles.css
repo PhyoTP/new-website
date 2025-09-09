@@ -234,3 +234,15 @@ nav{
   font-size: 1em;
   width: calc(100% - 15ch);
 }
+@media (max-width: 500px) {
+  .neofetch {
+    flex-direction: column; /* switch to column if container is narrow */
+  }
+  .neofetch img {
+    width: 90vw;
+    height: 90vw;
+    max-width: none;
+    max-height: none;
+    margin: 1em 0 0 0;
+  }
+}
