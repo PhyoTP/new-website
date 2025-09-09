@@ -66,7 +66,7 @@ const Output = (props) => {
                     <p><b>I make:</b> Apps, Games, Websites</p>
                     <p><b>Favourite Project:</b> <a href="https://multicards.phyotp.dev">Multicards</a></p>
                     <p>------------------------------------</p>
-                    <p><b>Commands:</b> neofetch, apps, websites, games, q</p>
+                    <p><b>Commands:</b> neofetch, apps, websites, games, q, languages, frameworks</p>
                     <p>Run <b>help</b> to see more info on commands.</p>
                 </div>
             </div>
@@ -106,6 +106,8 @@ const Output = (props) => {
                 <p><b>websites</b> - See websites I&apos;ve made</p>
                 <p><b>games</b> - See games I&apos;ve made</p>
                 <p><b>q</b> - Quick links</p>
+                <p><b>languages</b> - Languages I know</p>
+                <p><b>frameworks</b> - Frameworks I know</p>
             </div>
         )
     }else if (props.text === "q") {
@@ -122,7 +124,26 @@ const Output = (props) => {
                 <a href="https://classroom.google.com/u/0/h">Google Classroom</a>
             </nav>
         )
-
+    }else if (props.text === "languages") {
+        return (
+            <div className="terminal">
+                <p><b>General: </b>Python</p>
+                <p><b>Web: </b>HTML, CSS, JavaScript, TypeScript</p>
+                <p><b>Mobile: </b>Swift</p>
+                <p><b>Game Dev: </b>C#, Lua, GDScript</p>
+                <p><b>Other: </b>C, C++, SQL, Bash</p>
+            </div>
+        )
+    }else if (props.text === "frameworks") {
+        return (
+            <div className="terminal">
+                <p><b>Frontend: </b>React, Angular</p>
+                <p><b>Backend: </b>Flask</p>
+                <p><b>Mobile: </b>SwiftUI</p>
+                <p><b>Game Dev: </b>Unity, Roblox, Godot</p>
+                <p><b>Other: </b>Git</p>
+            </div>
+        )
     }else if (props.text.trim() === "") {
         return null;
     }else {
