@@ -232,7 +232,7 @@ nav{
   outline: none;
   font-family: 'Courier New', Courier, monospace;
   font-size: 1em;
-  width: calc(100% - 15ch);
+  width: calc(100% - 20ch);
 }
 @media (max-width: 500px) {
   .neofetch {
