@@ -1,24 +1,51 @@
-import { Link } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import me from "../assets/me.png";
+
 const Home = () => {
-    return (
-        <main>
-            <h1>PhyoTP's personal corner of the internet</h1>
-            <section>
-                <h2>heyyy! I'm Thet Pai, a student developer. I like making apps and games.</h2>
-            </section>
-            {/* <section>
-                <nav>
-                    <button>Test</button>
-                    <button>Test</button>
-                    <button>Test</button>
-                </nav>
-            </section> */}
-            <section>
-                <h2>App development</h2>
-                <p>I learnt App Development in the Swift Accelerator Programme in 2023, and have since published 2 apps.</p>
-                <Link to="/">Learn more</Link>
-            </section>
-        </main>
-    )
-}
+  const terminalRef = useRef(null);
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (terminalRef.current) {
+        if (index < "neofetch".length) {
+          terminalRef.current.innerHTML += "neofetch"[index];
+          setIndex((prev) => prev + 1); // use updater function
+        } else {
+          clearInterval(interval);
+        }
+      }
+    }, 200);
+
+    return () => clearInterval(interval); // cleanup
+  }, [index]); // depend on index so it updates correctly
+
+  return (
+    <main>
+      <h1>PhyoTP&apos;s personal corner of the internet</h1>
+      <p className="terminal" ref={terminalRef}>
+        <b>phyotp.dev</b>:~${" "}
+      </p>
+      {index === "neofetch".length && (
+        <div className="neofetch">
+          <img src={me} />
+          <div className="terminal">
+            <p>
+              <b>Hi! I&apos;m Phyo Thet Pai</b>
+            </p>
+            <p>------------------------------------</p>
+            <p><b>Also known as:</b> TheAveragePi</p>
+            <p><b>Living in:</b> Singapore</p>
+            <p><b>IRL Languages:</b> English, Chinese, Burmese, Japanese</p>
+            <p><b>Hobbies:</b> Coding, Photography, Scooters, Gaming</p>
+            <p><b>I make:</b> Apps, Games, Websites</p>
+            <p><b>Favourite Projects:</b> <a href="https://multicards.phyotp.dev">Multicards</a><a href="https://app.swiftinsg.org/Academ">Academ</a></p>
+
+          </div>
+        </div>
+      )}
+    </main>
+  );
+};
+
 export default Home;

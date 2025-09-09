@@ -204,3 +204,23 @@ nav{
   justify-content: space-around;
   flex-wrap: wrap;
 }
+
+.terminal b{
+  color: #FF5E0E;
+}
+.neofetch{
+  display: flex;
+  gap: 1vw;
+}
+.neofetch{
+  width: 100%;
+}
+.neofetch .terminal{
+  width: 100%;
+}
+.neofetch img{
+  width: calc(95vw - 250px);
+  max-width: 512px;
+  height: auto;
+  margin-top: 1em;
+}
