@@ -37,6 +37,7 @@ const Layout = () => {
         const rain = urlParams.get('rain');
         if (rain) {
             setIntensity(rain);
+            console.log(rain)
         }else if (data) {
             switch (data.data.items[0].forecasts[45].forecast){
                 case "Light Showers":
@@ -99,7 +100,11 @@ const Layout = () => {
     const r = document.querySelector(":root")
     let currentTheme = getCookie("theme");
     if (currentTheme === "") {
-        currentTheme = (currentHour < 6 || currentHour >= 20) ? "dark" : "light";
+        if (urlParams.get('theme')) {
+            currentTheme = urlParams.get('theme');
+        }else{
+            currentTheme = (currentHour < 6 || currentHour >= 20) ? "dark" : "light";
+        }
     }
     if (currentTheme === "dark") {
         r.style.setProperty("--background", "#000");
@@ -222,6 +227,7 @@ const Layout = () => {
                     return newParams;
                     });
                 }}/>
+                { currentTheme === "dark" ? <iframe id="bucket-webring" style={{"width":"70%", "height": "3rem", "border": "none"}} src="https://webring.bucketfish.me/embed.html?name=PhyoTP"></iframe> : <iframe id="bucket-webring" style={{"width": "70%", "height": "3rem", "border": "none"}} src="https://webring.bucketfish.me/embed.html?name=PhyoTP&lightmode=true"></iframe>  }
             </footer>
         </>
     )

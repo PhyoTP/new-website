@@ -50,6 +50,27 @@ const Home = () => {
 export default Home;
 
 const Output = (props) => {
+    const [urlParams, setParams] = useSearchParams();
+    useEffect(() => {
+        if (props.text.startsWith("time set")) {
+            const time = props.text.split(" ")[2];
+            setParams(prev => {
+                    const newParams = new URLSearchParams(prev);
+                    newParams.set('time', time);
+                    return newParams;
+                    });
+        }else if (props.text.startsWith("weather")) {
+            const weather = props.text.split(" ")[1];
+            if (weather == "rain"){
+                const intensity = props.text.split(" ")[2];
+                setParams(prev => {
+                    const newParams = new URLSearchParams(prev);
+                    newParams.set('rain', intensity);
+                    return newParams;
+                });
+            }
+        }
+    }, [props.text, setParams]);
     if (props.text === "neofetch"){
         return (
             <div className="neofetch">
@@ -67,7 +88,7 @@ const Output = (props) => {
                     <p><b>Favourite Project:</b> <a href="https://multicards.phyotp.dev">Multicards</a></p>
                     <p>------------------------------------</p>
                     <p><b>Commands:</b> neofetch, apps, websites, games, q, languages, frameworks</p>
-                    <p>Run <b>help</b> to see more info on commands.</p>
+                    <p>Run <b>help</b> to see more commands and info.</p>
                 </div>
             </div>
         )
@@ -108,6 +129,7 @@ const Output = (props) => {
                 <p><b>q</b> - Quick links</p>
                 <p><b>languages</b> - Languages I know</p>
                 <p><b>frameworks</b> - Frameworks I know</p>
+                <p><b>time set [morning/afternoon/evening/night/dusk]</b> - Change time of day on this website</p>
             </div>
         )
     }else if (props.text === "q") {
@@ -144,6 +166,22 @@ const Output = (props) => {
                 <p><b>Other: </b>Git</p>
             </div>
         )
+    }else if (props.text.startsWith("time set")) {
+        const time = props.text.split(" ")[2];
+        return (
+        <div className="terminal">
+            <p>Time of day set to {time}.</p>
+        </div>
+        );
+    }else if (props.text.startsWith("weather")) {
+        const weather = props.text.split(" ")[1];
+        if (weather == "rain"){
+            return (
+            <div className="terminal">
+                <p>Rain intensity set to {props.text.split(" ")[2]}.</p>
+            </div>
+        )
+    }
     }else if (props.text.trim() === "") {
         return null;
     }else {

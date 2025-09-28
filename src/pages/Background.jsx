@@ -13,7 +13,7 @@ const Background = ({ intensity = 80, image }) => {
     }
   }, [image]);
   useEffect(() => {
-    
+    console.log(intensity);
     if (intensity > 0) {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
