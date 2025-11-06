@@ -129,7 +129,7 @@ const Output = (props) => {
                 <p><b>q</b> - Quick links</p>
                 <p><b>languages</b> - Languages I know</p>
                 <p><b>frameworks</b> - Frameworks I know</p>
-                <p><b>time set [morning/afternoon/evening/night/dusk]</b> - Change time of day on this website</p>
+                <p><b>time set [morning/afternoon/evening/night/dark]</b> - Change time of day on this website</p>
             </div>
         )
     }else if (props.text === "q") {

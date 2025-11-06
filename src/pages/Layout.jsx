@@ -20,7 +20,7 @@ const Layout = () => {
     if (customTime) {
         time = customTime;
     }else if (currentHour >= 0 && currentHour < 6) {
-        time = "dusk";
+        time = "dark";
     } else if (currentHour >= 6 && currentHour < 12) {
         time = "morning";
     } else if (currentHour >= 12 && currentHour < 17) {
@@ -147,9 +147,16 @@ const Layout = () => {
         "night": [
             "PLX9tuOzNhuWNYt90Z3N8xqHwHlrgDh_xf"
         ],
-        "dusk": [
+        "dark": [
             "PLX9tuOzNhuWPvfNEpgeBD4UBCNAKPXJ9h"
         ]
+    }
+    let photosCount = {
+        "morning": 10,
+        "afternoon": 4,
+        "evening": 5,
+        "night": 6,
+        "dark": 3
     }
     return (
         <>
@@ -176,7 +183,7 @@ const Layout = () => {
                     </>
                 )}
             </header>
-            <Background intensity={intensity} image={`./assets/${window.innerHeight > window.innerWidth ? "portraitPhotos" : "landscapePhotos"}/${time}.jpg`}/>
+            <Background intensity={intensity} image={`./assets/photos/${time}/${Math.floor(Math.random() * photosCount[time]) + 1}.jpg`}/>
             <Outlet />
             <footer>
                 <p>this is a work in progress</p>
@@ -195,22 +202,6 @@ const Layout = () => {
                 )}
                 <hr/>
                 <h2>some more stuff you could change about this website:</h2>
-                <label htmlFor="time">Change the time of day:</label>
-                <select id="time" onChange={(e) => {
-                    const newTime = e.target.value;
-                    setParams(prev => {
-                    const newParams = new URLSearchParams(prev);
-                    newParams.set('time', newTime);
-                    return newParams;
-                    });
-                }} value={time}>
-                    <option value="morning">Morning</option>
-                    <option value="afternoon">Afternoon</option>
-                    <option value="evening">Evening</option>
-                    <option value="night">Night</option>
-                    <option value="dusk">Dusk</option>
-                </select>
-                <br />
                 <label htmlFor="rainChange">Change the rain intensity:</label>
                 <input type="number" id="rainChange" min="0"/>
                 <input type="submit" value="Change" onClick={() => {
