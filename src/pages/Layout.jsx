@@ -19,6 +19,12 @@ const Layout = () => {
     customTimeRef.current = customTime;
     }, [customTime]);
 
+    // compute Singapore hour for initial render (guard window for SSR)
+    const singaporeDateNow = typeof window !== "undefined"
+      ? new Date().toLocaleString("en-SG", { timeZone: "Asia/Singapore" })
+      : new Date().toLocaleString();
+    const currentHour = new Date(singaporeDateNow).getHours();
+
     useEffect(() => {
     const interval = setInterval(() => {
         const singaporeDate = new Date().toLocaleString("en-SG", { timeZone: "Asia/Singapore" });
@@ -114,7 +120,7 @@ const Layout = () => {
         }
         return "";
       }
-    const r = document.querySelector(":root")
+    const r = typeof document !== "undefined" ? document.querySelector(":root") : null
     let currentTheme = getCookie("theme");
     if (currentTheme === "") {
         if (urlParams.get('theme')) {
