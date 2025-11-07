@@ -10,26 +10,43 @@ const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
 const Layout = () => {
     const [urlParams, setParams] = useSearchParams();
-    const singaporeTime = new Date().toLocaleTimeString("en-SG", {
-        timeZone: "Asia/Singapore",
-        timeStyle: "short"
-      });
-    const currentHour = new Date().getHours();
-    let time = "";
-    const customTime = urlParams.get('time');
-    if (customTime) {
-        time = customTime;
-    }else if (currentHour >= 0 && currentHour < 6) {
+    const clock = useRef();
+    const [currentTime, setCurrentTime] = useState("");
+    const customTime = urlParams.get("time");
+
+    const customTimeRef = useRef(customTime);
+    useEffect(() => {
+    customTimeRef.current = customTime;
+    }, [customTime]);
+
+    useEffect(() => {
+    const interval = setInterval(() => {
+        const singaporeDate = new Date().toLocaleString("en-SG", { timeZone: "Asia/Singapore" });
+        const currentHour = new Date(singaporeDate).getHours();
+
+        let time = "";
+        if (customTimeRef.current) {
+        time = customTimeRef.current;
+        } else if (currentHour >= 0 && currentHour < 6) {
         time = "dark";
-    } else if (currentHour >= 6 && currentHour < 12) {
+        } else if (currentHour >= 6 && currentHour < 12) {
         time = "morning";
-    } else if (currentHour >= 12 && currentHour < 17) {
+        } else if (currentHour >= 12 && currentHour < 17) {
         time = "afternoon";
-    } else if (currentHour >= 17 && currentHour < 20) {
+        } else if (currentHour >= 17 && currentHour < 20) {
         time = "evening";
-    } else if (currentHour >= 20 && currentHour < 24) {
+        } else if (currentHour >= 20 && currentHour < 24) {
         time = "night";
-    }
+        }
+
+        setCurrentTime(prev => (prev !== time ? time : prev));
+        if (clock.current)
+        clock.current.innerText = new Date(singaporeDate).toLocaleTimeString("en-SG");
+    }, 1000);
+
+    return () => clearInterval(interval);
+    }, []); // ✅ run once
+
     const { data } = useSWR("https://api-open.data.gov.sg/v2/real-time/api/two-hr-forecast", fetcher);
     const [ intensity, setIntensity ] = useState(0);
     const [ checkWeather, setCheck ] = useState(0);
@@ -168,7 +185,7 @@ const Layout = () => {
                 <span className="grass"></span>
             </label>
                 <div className="header">
-                    <h1>{singaporeTime}</h1>
+                    <h1 ref={clock}></h1>
                     <p>Singapore time</p>
                 </div>
                 {data && (
@@ -183,7 +200,7 @@ const Layout = () => {
                     </>
                 )}
             </header>
-            <Background intensity={intensity} image={`./assets/photos/${time}/${Math.floor(Math.random() * photosCount[time]) + 1}.jpg`}/>
+            <Background intensity={intensity} image={`./assets/photos/${currentTime}/${Math.floor(Math.random() * photosCount[currentTime]) + 1}.jpg`}/>
             <Outlet />
             <footer>
                 <p>this is a work in progress</p>
@@ -194,7 +211,7 @@ const Layout = () => {
                     <a href="https://bit.ly/ScootPlayz">My YouTube channel</a>
                 </nav>
                 <hr/>
-                <Buds listId={urlParams.get("playlist") || playlists[time]?.[0]}/>
+                <Buds listId={urlParams.get("playlist") || playlists[currentTime]?.[0]}/>
                 <hr/>
                 <p>by the way you see that {currentTheme === "dark" ? "moon" : "sun"} thing in the top left corner, that's a theme switcher you should try clicking on it</p>
                 { intensity > 0 && (

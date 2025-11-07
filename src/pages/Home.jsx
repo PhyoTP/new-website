@@ -86,6 +86,7 @@ const Output = (props) => {
                     <p><b>Hobbies:</b> Coding, Photography, Scooters, Gaming</p>
                     <p><b>I make:</b> Apps, Games, Websites</p>
                     <p><b>Favourite Project:</b> <a href="https://multicards.phyotp.dev">Multicards</a></p>
+                    <p><b>Setup:</b> TravelMate Spin B311RN-32 (Linux Mint), iPad Air 4th Gen</p>
                     <p>------------------------------------</p>
                     <p><b>Commands:</b> neofetch, apps, websites, games, q, languages, frameworks</p>
                     <p>Run <b>help</b> to see more commands and info.</p>
