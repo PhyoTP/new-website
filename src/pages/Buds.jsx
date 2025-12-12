@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import Case from "../assets/case.svg";
 import Dial from "../assets/dial.svg";
+import {animate} from "animejs";
 
 export default function Buds({listId}) {
     const playerRef = useRef(null);
@@ -13,7 +14,6 @@ export default function Buds({listId}) {
     const [currentTitle, setCurrentTitle] = useState("");
     const clickCountRef = useRef(0);
     const [progress, setProgress] = useState(0); // 0 to 100
-    
     // Use ref to store current volume for event handlers
     const volumeRef = useRef(volume);
     volumeRef.current = volume;
@@ -80,12 +80,12 @@ export default function Buds({listId}) {
 
         function createPlayer() {
             playerRef.current = new window.YT.Player('yt-player', {
-                height: '0',
-                width: '0',
+                height: '100',
+                width: '100',
                 playerVars: {
                     listType: 'playlist',
                     list: listId,
-                    autoplay: 0, // Changed to 0 to avoid autoplay restrictions
+                    autoplay: 1,
                     controls: 0,
                     modestbranding: 1,
                     rel: 0,
@@ -133,6 +133,7 @@ export default function Buds({listId}) {
 
 
         const handleClick = () => {
+            playerRef.current.height = "1";
             dial.style.animation = "click 0.1s";
             setTimeout(() => {
                 dial.style.animation = "";
@@ -236,28 +237,38 @@ export default function Buds({listId}) {
 
         return () => clearInterval(interval);
     }, [ready]);
-
+    useEffect(() => {
+        animate("#buds",{
+            right: "10px"
+        })
+    }, [playerRef.current]);
     return (
         <div>
             {/* Hidden player */}
-            <div id="yt-player"></div>
 
-            <div id="buds" ref={budsRef}>
+            <div id="buds" ref={budsRef} onClick={()=>console.log("Buds")}>
+                <div id="yt-player"></div>
                 <img src={Case} id="case" />
-                <img src={Dial} id="dial" ref={dialRef} />
+                <div id="budsInfo">
+                    <img src={Dial} id="dial" ref={dialRef} />
+                    {ready ? (
+                        <div style={{padding:'0.5rem'}}>
+                            <p>Status: {isPlaying ? 'Playing' : 'Paused'}</p>
+                            <p>Volume: {volume}%</p>
+                            <p>Now Playing: {currentTitle}</p>
+                            <p>{Math.floor(progress/100*playerRef.current?.getDuration?.()/60)}:{Math.floor(progress/100*playerRef.current?.getDuration?.()%60) < 10 && "0"}{Math.floor(progress/100*playerRef.current?.getDuration?.()%60)} / {Math.floor(playerRef.current?.getDuration?.()/60)}:{Math.floor(playerRef.current?.getDuration?.()%60) < 10 && "0"}{Math.floor(playerRef.current?.getDuration?.()%60)}</p>
+                        </div>
+                    ) : <p>Loading...</p>}
+                </div>
             </div>
             <h2>Buds</h2>
             <p>Click the dial to play/pause, scroll or swipe to adjust volume</p>
-
-            {!ready && <p>Loading...</p>}
-            {ready && (
+            {ready ? (
                 <div>
-                    <p>Status: {isPlaying ? 'Playing' : 'Paused'}</p>
-                    <p>Volume: {volume}%</p>
                     <p>Click to play/pause, scroll to adjust volume</p>
                     <p>Double click to next video, triple click to the video before</p>
-                    <p>Now Playing: {currentTitle}</p>
                     <input
+                        style={{width:'40%', minWidth:'130px'}}
                         type="range"
                         min="0"
                         max="100"
@@ -274,7 +285,7 @@ export default function Buds({listId}) {
                     />
                     <p>{Math.floor(progress/100*playerRef.current?.getDuration?.()/60)}:{Math.floor(progress/100*playerRef.current?.getDuration?.()%60) < 10 && "0"}{Math.floor(progress/100*playerRef.current?.getDuration?.()%60)} / {Math.floor(playerRef.current?.getDuration?.()/60)}:{Math.floor(playerRef.current?.getDuration?.()%60) < 10 && "0"}{Math.floor(playerRef.current?.getDuration?.()%60)}</p>
                 </div>
-            )}
+            ) : <p>Loading...</p>}
         </div>
     );
 }

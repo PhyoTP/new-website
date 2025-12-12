@@ -1,3 +1,4 @@
+
 #start {
     height: calc(100vh - 4em);
     width: 100%;
@@ -8,6 +9,9 @@
     z-index: -1;
     margin-top: -1em;
     overflow: hidden; /* Prevent image overflow */
+    display: flex;
+    align-items: end;
+    gap: 1rem;
 }
 
 /* Add media query for mobile devices */
@@ -23,7 +27,7 @@ main section{
     border-top: 1px solid var(--foreground);
     padding: 5px;
 }
-a{
+a {
     color: var(--background);
     text-decoration: none;
     padding: 5px;
@@ -32,21 +36,26 @@ a{
     box-shadow: 10px 5px var(--background), 10px 5px 0 1px var(--foreground);
     transition: all 0.3s ease;
 }
-a:hover{
+a:hover {
     background-color: var(--background);
     color: var(--foreground);
     box-shadow: 0 0 0 2px var(--foreground);
     border-radius: 5px;
+    cursor: pointer;
+}
+.imageText {
+    color: #fff;
+    text-shadow: 0.1em 0.1em 0 #000;
 }
 header{
-    color: #fff;
     padding: 1em;
-    width: calc(100%-2em);
+    width: calc(100% - 2em);
     height: 0;
     display: flex;
     background-color: transparent;
     justify-content: space-between;
-    text-shadow: 0.1em 0.1em 0 #000;
+    position: relative;
+    top: -84px;
 }
 .header{
     display: flex;
@@ -60,7 +69,7 @@ footer{
     background-color: var(--footer);
     padding: 1em;
     margin-top: 1em;
-    width: calc(100%-2em);
+    width: calc(100% - 2em);
 }
 #rain{
     position: absolute;
@@ -170,7 +179,12 @@ header *{
   }
 
   /* earbuds */
-
+#yt-player{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+}
 
 #buds {
   --rs: calc(30vmin / 1460);
@@ -183,7 +197,7 @@ header *{
   );
   position: fixed;
   bottom: 10px;
-  right: 10px;
+  right: calc(-1471 * var(--rs));
   touch-action: none;
   user-select: none;
   cursor: grab;
@@ -193,15 +207,16 @@ header *{
   position: absolute;
   height: 30vmin;
   width: calc(1471 * var(--rs));
+    z-index: -1;
 }
-
+#budsInfo{
+    display: flex;
+    font-size: calc(var(--rs)*75);
+}
 #dial {
   --spin: 0deg;
-  position: absolute;
   height: calc(620 * var(--rs));
   width: calc(620 * var(--rs));
-  left: calc(-10 * var(--rs));
-  top: calc(-10 * var(--rs));
   transition: transform 0.1s ease-in;
   transform: rotate(var(--spin));
 }

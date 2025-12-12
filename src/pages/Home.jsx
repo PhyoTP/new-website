@@ -1,68 +1,77 @@
-import { useEffect, useState, useRef } from "react";
-import { useSearchParams } from "react-router-dom";
+import {useEffect, useState, useRef} from "react";
+import {useSearchParams} from "react-router-dom";
 import me from "../assets/me.png";
 
 const Home = () => {
-  const [index, setIndex] = useState(0);
-  const [text, setText] = useState("");
-  const inputRef = useRef(null);
-  const [urlParams, setParams] = useSearchParams();
+    const [index, setIndex] = useState(0);
+    const [text, setText] = useState("");
+    const inputRef = useRef(null);
+    const [urlParams] = useSearchParams();
 
-  useEffect(() => {
-    if (!urlParams.get("command")){
-        const interval = setInterval(() => {
-            if (index < "neofetch".length) {
-            setText((prev) => prev + "neofetch"[index]);
-            setIndex((prev) => prev + 1); // use updater function
-            } else {
-            clearInterval(interval);
-            }
-        }, 200);
-
-        return () => clearInterval(interval); // cleanup
-    } else {
-        setText(urlParams.get("command"));
-        setIndex("neofetch".length);
-    }
-  }, [index]); // depend on index so it updates correctly
-  
-  return (
-    <main>
-      {!urlParams.get("command") &&
-        <h1>PhyoTP&apos;s personal corner of the internet</h1>
-      }
-      <p className="terminal"><b>phyotp.dev</b>:~$ {text}</p>
-      {index === "neofetch".length && (
-        <>
-            <Output text={text}/>
-            <p className="terminal"><b>phyotp.dev</b>:~$ <input type="text" ref={inputRef} onKeyDown={(e) => {
-                if(e.key === "Enter"){
-                    setText(inputRef.current.value);
-                    inputRef.current.value = "";
+    useEffect(() => {
+        if (!urlParams.get("command")) {
+            const interval = setInterval(() => {
+                if (index < "neofetch".length) {
+                    setText((prev) => prev + "neofetch"[index]);
+                    setIndex((prev) => prev + 1); // use updater function
+                } else {
+                    clearInterval(interval);
                 }
-            }}/></p>
-        </>
-      )}
-    </main>
-  );
+            }, 200);
+
+            return () => clearInterval(interval); // cleanup
+        } else {
+            setText(urlParams.get("command"));
+            setIndex("neofetch".length);
+        }
+    }, [index]); // depend on index so it updates correctly
+
+    return (
+        <main>
+            {!urlParams.get("command") &&
+                <h1>PhyoTP&apos;s personal corner of the internet</h1>
+            }
+            <p className="terminal"><b>phyotp.dev</b>:~$ {text}</p>
+            {index === "neofetch".length && (
+                <>
+                    <Output text={text}/>
+                    <p className="terminal"><b>phyotp.dev</b>:~$ <input type="text" ref={inputRef} onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                            setText(inputRef.current.value);
+                            inputRef.current.value = "";
+                        }
+                    }}/></p>
+                </>
+            )}
+        </main>
+    );
 };
 
 export default Home;
 
-const Output = (props) => {
-    const [urlParams, setParams] = useSearchParams();
+const Output = ({text}) => {
+    const [, setParams] = useSearchParams();
+    const times = ["morning", "afternoon", "evening", "night", "dark"]
     useEffect(() => {
-        if (props.text.startsWith("time set")) {
-            const time = props.text.split(" ")[2];
-            setParams(prev => {
+        if (text.startsWith("time set")) {
+            const time = text.split(" ")[2];
+            if (times.includes(time)) {
+                setParams(prev => {
                     const newParams = new URLSearchParams(prev);
                     newParams.set('time', time);
                     return newParams;
-                    });
-        }else if (props.text.startsWith("weather")) {
-            const weather = props.text.split(" ")[1];
-            if (weather == "rain"){
-                const intensity = props.text.split(" ")[2];
+                });
+            } else if (time === "reset") {
+                setParams(prev => {
+                    const newParams = new URLSearchParams(prev);
+                    newParams.delete("time");
+                    return newParams;
+                });
+            }
+        } else if (text.startsWith("weather")) {
+            const weather = text.split(" ")[1];
+            if (weather === "rain" && Number.isFinite(+text.split(" ")[2])) {
+                const intensity = text.split(" ")[2];
                 setParams(prev => {
                     const newParams = new URLSearchParams(prev);
                     newParams.set('rain', intensity);
@@ -70,14 +79,14 @@ const Output = (props) => {
                 });
             }
         }
-    }, [props.text, setParams]);
-    if (props.text === "neofetch"){
+    }, [text, setParams]);
+    if (text === "neofetch") {
         return (
             <div className="neofetch">
-                <img src={me} />
+                <img src={me}/>
                 <div className="terminal">
                     <p>
-                    <b>Hi! I&apos;m Phyo Thet Pai</b>
+                        <b>Hi! I&apos;m Phyo Thet Pai</b>
                     </p>
                     <p>------------------------------------</p>
                     <p><b>Also known as:</b> TheAveragePi</p>
@@ -86,21 +95,23 @@ const Output = (props) => {
                     <p><b>Hobbies:</b> Coding, Photography, Scooters, Gaming</p>
                     <p><b>I make:</b> Apps, Games, Websites</p>
                     <p><b>Favourite Project:</b> <a href="https://multicards.phyotp.dev">Multicards</a></p>
-                    <p><b>Setup:</b> TravelMate Spin B311RN-32 (Linux Mint), iPad Air 4th Gen</p>
+                    <p><b>Setup:</b> M4 Pro Macbook Pro, TravelMate Spin (Linux Mint), iPad Air</p>
                     <p>------------------------------------</p>
                     <p><b>Commands:</b> neofetch, apps, websites, games, q, languages, frameworks</p>
                     <p>Run <b>help</b> to see more commands and info.</p>
                 </div>
             </div>
         )
-    }else if (props.text === "apps") {
+    }
+    else if (text === "apps") {
         return (
             <nav>
                 <a href="https://multicards.phyotp.dev">Multicards</a>
                 <a href="https://app.swiftinsg.org/Academ">Academ</a>
             </nav>
         )
-    }else if (props.text === "websites") {
+    }
+    else if (text === "websites") {
         return (
             <nav>
                 <a href="https://multicards.phyotp.dev">Multicards</a>
@@ -111,14 +122,17 @@ const Output = (props) => {
                 <a href="https://phyotp.github.io/ArcOnline">ArcOnline</a>
             </nav>
         )
-    }else if (props.text === "games") {
+    }
+    else if (text === "games") {
         return (
             <nav>
                 <a href="https://phyotp.itch.io/Bouncer">Bouncer</a>
-                <a href="https://www.roblox.com/share?code=c24371b39f9de146a3183c7205141a2d&type=ExperienceDetails&stamp=1718626359965">Find the Code Langs</a>
+                <a href="https://www.roblox.com/share?code=c24371b39f9de146a3183c7205141a2d&type=ExperienceDetails&stamp=1718626359965">Find
+                    the Code Langs</a>
             </nav>
         )
-    }else if (props.text === "help") {
+    }
+    else if (text === "help") {
         return (
             <div className="terminal">
                 <p><b>Commands:</b></p>
@@ -130,10 +144,12 @@ const Output = (props) => {
                 <p><b>q</b> - Quick links</p>
                 <p><b>languages</b> - Languages I know</p>
                 <p><b>frameworks</b> - Frameworks I know</p>
-                <p><b>time set [morning/afternoon/evening/night/dark]</b> - Change time of day on this website</p>
+                <p><b>time set [time]</b> - Change time of day on this website, run without to see default options</p>
+                <p><b>weather rain [intensity]</b> - Change rain intensity</p>
             </div>
         )
-    }else if (props.text === "q") {
+    }
+    else if (text === "q") {
         return (
             <nav>
                 <a href="https://youtube.com/?authuser=1">YouTube</a>
@@ -147,7 +163,8 @@ const Output = (props) => {
                 <a href="https://classroom.google.com/u/0/h">Google Classroom</a>
             </nav>
         )
-    }else if (props.text === "languages") {
+    }
+    else if (text === "languages") {
         return (
             <div className="terminal">
                 <p><b>General: </b>Python</p>
@@ -157,7 +174,8 @@ const Output = (props) => {
                 <p><b>Other: </b>C, C++, SQL, Bash</p>
             </div>
         )
-    }else if (props.text === "frameworks") {
+    }
+    else if (text === "frameworks") {
         return (
             <div className="terminal">
                 <p><b>Frontend: </b>React, Angular</p>
@@ -167,28 +185,77 @@ const Output = (props) => {
                 <p><b>Other: </b>Git</p>
             </div>
         )
-    }else if (props.text.startsWith("time set")) {
-        const time = props.text.split(" ")[2];
-        return (
-        <div className="terminal">
-            <p>Time of day set to {time}.</p>
-        </div>
-        );
-    }else if (props.text.startsWith("weather")) {
-        const weather = props.text.split(" ")[1];
-        if (weather == "rain"){
-            return (
-            <div className="terminal">
-                <p>Rain intensity set to {props.text.split(" ")[2]}.</p>
-            </div>
-        )
     }
-    }else if (props.text.trim() === "") {
+    else if (text.startsWith("time set")) {
+        const time = text.split(" ")[2];
+        if (time) {
+            if (times.includes(time)) {
+                return (
+                    <div className="terminal">
+                        <p>Time of day set to {time}.</p>
+                    </div>
+                );
+            } else if (time === "reset") {
+                return (
+                    <div className="terminal">
+                        <p>Time reset to current time.</p>
+                    </div>
+                )
+            } else {
+                return (
+                    <div className="terminal">
+                        <p>Time does not exist, please choose from [{times.join("/")}]</p>
+                    </div>
+                )
+            }
+        } else {
+            return (
+                <nav>
+                    {times.map(time => (
+                        <a onClick={() => {
+                            setParams(prev => {
+                                const newParams = new URLSearchParams(prev);
+                                newParams.set('time', time);
+                                return newParams;
+                            });
+                        }}>{time.charAt(0).toUpperCase() + time.slice(1)}</a>
+                    ))}
+                    <a onClick={() => {
+                        setParams(prev => {
+                            const newParams = new URLSearchParams(prev);
+                            newParams.delete('time');
+                            return newParams;
+                        });
+                    }}>Reset</a>
+                </nav>
+            )
+        }
+    }
+    else if (text.startsWith("weather")) {
+        const weather = text.split(" ")[1];
+        if (weather === "rain") {
+            if (Number.isFinite(+text.split(" ")[2])) {
+                return (
+                    <div className="terminal">
+                        <p>Rain intensity set to {text.split(" ")[2]}.</p>
+                    </div>
+                )
+            }else{
+                return (
+                    <div className="terminal">
+                        <p>Intensity must be a number, eg. 50, 100, 1000</p>
+                    </div>
+                )
+            }
+        }
+    }else if (text.startsWith("music")) {
+
+    } else if (text.trim() === "") {
         return null;
-    }else {
+    } else {
         return (
             <div className="terminal">
-                <p>Command not found: {props.text}</p>
+                <p>Command not found: {text}</p>
                 <p>Run <b>help</b> to see available commands.</p>
             </div>
         )
