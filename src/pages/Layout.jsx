@@ -17,7 +17,8 @@ const Layout = () => {
     useEffect(() => {
         paramRef.current = urlParams;
     }, [urlParams]);
-
+    const cloudRef1 = useRef();
+    const cloudRef2 = useRef();
     // compute Singapore hour for initial render (guard window for SSR)
     const singaporeDateNow = typeof window !== "undefined"
         ? new Date().toLocaleString("en-SG", {timeZone: "Asia/Singapore"})
@@ -48,6 +49,7 @@ const Layout = () => {
             if (paramRef.current.get("artist")) {
                 setArtist(paramRef.current.get("artist"));
             }
+
             if (clock.current)
                 clock.current.innerText = new Date(singaporeDate).toLocaleTimeString("en-SG");
         }, 1000);
@@ -64,7 +66,8 @@ const Layout = () => {
             setIntensity(rain);
             console.log(rain)
         } else if (data) {
-            switch (data.data.items[0].forecasts[45].forecast) {
+            const forecast = data.data.items[0].forecasts[45].forecast;
+            switch (forecast) {
                 case "Light Showers":
                     setIntensity(50);
                     break;
@@ -179,19 +182,19 @@ const Layout = () => {
     return (
         <>
 
-            <header className="imageText">
+            <header>
                 <label className="switch" aria-label="Change theme">
                     <input type="checkbox" checked={theme} onChange={toggleTheme}/>
                     <span className="slider"></span>
                     <span className="grass"></span>
                 </label>
-                <div className="header">
+                <div className="header imageText" ref={cloudRef1}>
                     <h1 ref={clock}>0:00:00</h1>
                     <p>Singapore time</p>
                 </div>
                 {data && (
                     <>
-                        <div className="header">
+                        <div className="header imageText" ref={cloudRef2}>
                             <h1>{data.data.items[0].forecasts[45].forecast}</h1>
                             <p>Woodlands, Singapore</p>
                         </div>

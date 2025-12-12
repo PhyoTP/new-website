@@ -44,18 +44,32 @@ a:hover {
     cursor: pointer;
 }
 .imageText {
-    color: #fff;
-    text-shadow: 0.1em 0.1em 0 #000;
+    color: var(--foreground);
+    text-shadow: 0.1em 0.1em 0 var(--background);
+}
+.clouds {
+    color: var(--foreground);
+    background-color: color-mix(in srgb, var(--footer), transparent 30%);
+    padding: 1rem;
+    position: relative;
+    animation: wind infinite alternate linear;
+    animation-duration: 0s;
+
+}
+@keyframes wind {
+    from {left: -5vw;}
+    to {left: 5vw;}
 }
 header{
     padding: 1em;
     width: calc(100% - 2em);
-    height: 0;
-    display: flex;
+    height: 6em;
     background-color: transparent;
+    display: flex;
     justify-content: space-between;
-    position: relative;
+    align-items: center;
     top: -84px;
+    position: absolute;
 }
 .header{
     display: flex;
@@ -63,7 +77,7 @@ header{
 }
 .header *{
     margin-bottom: -1rem;
-    padding: 0 1rem 0 1rem;
+    padding: 0 1rem 0 1rem
 }
 footer{
     background-color: var(--footer);

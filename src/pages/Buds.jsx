@@ -262,7 +262,7 @@ export default function Buds({listId}) {
                 </div>
             </div>
             <h2>Buds</h2>
-            <p>Click the dial to play/pause, scroll or swipe to adjust volume</p>
+            <p>Based on the <a href="https://sg.nothing.tech/products/cmf-buds-pro-2?Colour=Orange">CMF Buds Pro 2</a> that I have (not sponsored, just a fan)</p>
             {ready ? (
                 <div>
                     <p>Click to play/pause, scroll to adjust volume</p>
