@@ -27,35 +27,52 @@ const Layout = () => {
 
     useEffect(() => {
         const interval = setInterval(() => {
-            const singaporeDate = new Date().toLocaleString("en-SG", {timeZone: "Asia/Singapore"});
-            const currentHour = new Date(singaporeDate).getHours();
+            const now = new Date();
+
+            const singaporeParts = new Intl.DateTimeFormat("en-SG", {
+                timeZone: "Asia/Singapore",
+                hour: "numeric",
+                minute: "numeric",
+                second: "numeric",
+                hour12: false
+            }).formatToParts(now);
+
+            const currentHour = Number(
+                singaporeParts.find(p => p.type === "hour").value
+            );
 
             let time = "";
             if (paramRef.current.get("time")) {
                 time = paramRef.current.get("time");
-            } else if (currentHour >= 0 && currentHour < 6) {
+            } else if (currentHour < 6) {
                 time = "dark";
-            } else if (currentHour >= 6 && currentHour < 12) {
+            } else if (currentHour < 12) {
                 time = "morning";
-            } else if (currentHour >= 12 && currentHour < 17) {
+            } else if (currentHour < 17) {
                 time = "afternoon";
-            } else if (currentHour >= 17 && currentHour < 20) {
+            } else if (currentHour < 20) {
                 time = "evening";
-            } else if (currentHour >= 20 && currentHour < 24) {
+            } else {
                 time = "night";
             }
 
             setCurrentTime(time);
+
             if (paramRef.current.get("artist")) {
                 setArtist(paramRef.current.get("artist"));
             }
 
-            if (clock.current)
-                clock.current.innerText = new Date(singaporeDate).toLocaleTimeString("en-SG");
+            if (clock.current) {
+                clock.current.innerText = new Intl.DateTimeFormat("en-SG", {
+                    timeZone: "Asia/Singapore",
+                    timeStyle: "medium"
+                }).format(now);
+            }
         }, 1000);
 
         return () => clearInterval(interval);
-    }, []); // ✅ run once
+    }, []);
+
 
     const {data} = useSWR("https://api-open.data.gov.sg/v2/real-time/api/two-hr-forecast", fetcher);
     const [intensity, setIntensity] = useState(0);
@@ -64,7 +81,10 @@ const Layout = () => {
         const rain = urlParams.get('rain');
         if (rain) {
             setIntensity(rain);
-            console.log(rain)
+            if (rain > 0){
+                console.log(rain);
+                setArtist("laufey")
+            }
         } else if (data) {
             const forecast = data.data.items[0].forecasts[45].forecast;
             switch (forecast) {
@@ -100,7 +120,10 @@ const Layout = () => {
                     break;
             }
         }
-        console.log(intensity);
+        if (intensity > 0){
+            console.log(intensity);
+            setArtist("laufey")
+        }
     }, [data, checkWeather, urlParams]);
     useEffect(() => {
         animate("header",{
