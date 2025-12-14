@@ -1,7 +1,9 @@
-import { useEffect, useRef, useState, useCallback } from 'react';
+import {useEffect, useRef, useState, useCallback, useMemo} from 'react';
 import Case from "../assets/case.svg";
 import Dial from "../assets/dial.svg";
 import {animate} from "animejs";
+import useSWR from "swr";
+const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
 export default function Buds({listId}) {
     const playerRef = useRef(null);
@@ -14,7 +16,6 @@ export default function Buds({listId}) {
     const [currentTitle, setCurrentTitle] = useState("");
     const clickCountRef = useRef(0);
     const [progress, setProgress] = useState(0); // 0 to 100
-    // Use ref to store current volume for event handlers
     const volumeRef = useRef(volume);
     volumeRef.current = volume;
 
@@ -100,6 +101,7 @@ export default function Buds({listId}) {
                         event.target.setVolume(50);
                         // Shuffle playlist on ready
                         event.target.setShuffle(true);
+                        event.target.nextVideo();
                     },
                     onStateChange: (event) => {
                         // Update playing state based on YouTube player state
@@ -242,9 +244,44 @@ export default function Buds({listId}) {
             right: "10px"
         })
     }, [playerRef.current]);
+
+    function cleanTitle(title) {
+        return title
+            .replace(/\(?official.*\)/i, "")
+            .replace(/\(?lyric.*\)/i, "")
+            .replace("-", "")
+            .trim()
+    }
+    const artist = useMemo(()=>{
+        if (!playerRef.current?.getVideoData() || !ready) return;
+
+        const videoData = playerRef.current.getVideoData();
+        console.log(videoData);
+        return videoData.author
+            .replace(" - Topic", "")
+            .replace("VEVO", "")
+            .trim();
+    }, [currentTitle, ready]);
+    const duration = useMemo(()=>{
+        if (!playerRef.current || !ready) return;
+        return Math.floor(playerRef.current.getDuration());
+    }, [currentTitle, ready]);
+    function artistRegex() {
+        const pattern = artist.split("").join("\\s*");
+        return new RegExp(pattern, "i");
+    }
+    const {data: lyricData} = useSWR(currentTitle !== "" ? `https://lrclib.net/api/search?q=${encodeURIComponent(artist.trim())} ${encodeURIComponent(cleanTitle(currentTitle).replace(artistRegex(), "").trim())}` : null, fetcher);
+    const lyrics = useMemo(()=>{
+        if (!lyricData) return null;
+        const synced = lyricData.find(l => l.syncedLyrics)
+        if (!synced) return null;
+        const lines = synced.syncedLyrics.split("\n");
+        const times = lines.map(line => line.split("]")[0].slice(1));
+        const verses = lines.map(line => line.split("]")[1].trim());
+        return [times, verses];
+    },[lyricData])
     return (
         <div>
-            {/* Hidden player */}
 
             <div id="buds" ref={budsRef} onClick={()=>console.log("Buds")}>
                 <div id="yt-player"></div>
@@ -284,6 +321,19 @@ export default function Buds({listId}) {
                         }}
                     />
                     <p>{Math.floor(progress/100*playerRef.current?.getDuration?.()/60)}:{Math.floor(progress/100*playerRef.current?.getDuration?.()%60) < 10 && "0"}{Math.floor(progress/100*playerRef.current?.getDuration?.()%60)} / {Math.floor(playerRef.current?.getDuration?.()/60)}:{Math.floor(playerRef.current?.getDuration?.()%60) < 10 && "0"}{Math.floor(playerRef.current?.getDuration?.()%60)}</p>
+                    {lyrics && (() => {
+                        const duration = playerRef.current?.getDuration?.();
+                        if (!duration) return null;
+
+                        const currentTime = (progress / 100) * duration;
+
+                        const index = lyrics[0].findIndex(time => {
+                            const [m, s] = time.split(":").map(Number);
+                            console.log([m * 60 + s, currentTime])
+                            return m * 60 + s > currentTime;
+                        })-1;
+                        return index !== -1 ? <p>Lyrics: {lyrics[1][index]}</p> : null;
+                    })()}
                 </div>
             ) : <p>Loading...</p>}
         </div>

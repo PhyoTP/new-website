@@ -200,7 +200,14 @@ const Layout = () => {
             "night": "PLX9tuOzNhuWNYt90Z3N8xqHwHlrgDh_xf",
             "dark": "PLX9tuOzNhuWPvfNEpgeBD4UBCNAKPXJ9h"
         },
-        "laufey": "PLX9tuOzNhuWNWtj0tWOLJ-1uKBI5inI_-"
+        "laufey": "PLX9tuOzNhuWNWtj0tWOLJ-1uKBI5inI_-",
+        "yung kai":{
+            "morning": "PLX9tuOzNhuWNT4sS1r99XEolSrlkPdNTY",
+            "afternoon": "PLX9tuOzNhuWN6X61zppWrae_xMLk21YHc",
+            "evening": "PLX9tuOzNhuWNUzZdrpj4RPslmLIp1O5c5",
+            "night": "PLX9tuOzNhuWNyYibO1fQYJH0ecjH7qZ1-",
+            "dark": "PLX9tuOzNhuWOmx85j70EN7ym4iYcga-2y"
+        }
     }
     return (
         <>
