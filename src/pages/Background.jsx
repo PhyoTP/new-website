@@ -11,7 +11,7 @@ const Background = ({intensity = 80, image = null, time}) => {
         if (startRef.current) {
             let imNum = Math.floor(Math.random() * photosCount[time]) + 1
             setImageNum(imNum);
-            startRef.current.style.backgroundImage = `url(${image || `./assets/photos/${time}/${imNum}.jpg`})`;
+            startRef.current.style.backgroundImage = `url(${image || `/assets/photos/${time}/${imNum}.jpg`})`;
         }
         console.log(image)
     }, [time]);
