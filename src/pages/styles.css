@@ -150,7 +150,7 @@ header *{
     width: 0.8em;
     left: 1.2em;
     top: 0.8em;
-    background-image: url("https://hc-cdn.hel1.your-objectstorage.com/s/v3/f0e7b6804fc15fee57791b1b54d3e6a27a727482_envsprite_full-moon.png"), url("https://hc-cdn.hel1.your-objectstorage.com/s/v3/eb35384bb72ba49513a14569ee75b0945d458279_sun__texture__je1_be1_1_.png");
+    background-image: url("./assets/moon.png"), url("./assets/sun.png");
     background-size: contain;
     background-position: top, bottom;
     background-repeat: no-repeat;
@@ -214,7 +214,7 @@ header *{
   right: calc(-1471 * var(--rs));
   touch-action: none;
   user-select: none;
-  cursor: grab;
+  cursor: pointer;
 }
 
 #case {

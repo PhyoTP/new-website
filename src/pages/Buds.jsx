@@ -94,6 +94,7 @@ export default function Buds({listId}) {
                     loop: 1,
                     enablejsapi: 1
                 },
+                origin: window.location.origin,
                 events: {
                     onReady: (event) => {
                         setReady(true);

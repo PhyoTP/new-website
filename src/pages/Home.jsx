@@ -78,6 +78,50 @@ const Output = ({text}) => {
                     return newParams;
                 });
             }
+        } else if (text.startsWith("music")) {
+            const command = text.split(" ")[1];
+            if (command === "artist") {
+                const artist = text.split(" ").slice(2).join(" ");
+                if (artist) {
+                    if (artist === "reset") {
+                        setParams(prev => {
+                            const newParams = new URLSearchParams(prev);
+                            newParams.delete('artist');
+                            return newParams;
+                        })
+                    }else{
+                        setParams(prev => {
+                            const newParams = new URLSearchParams(prev);
+                            newParams.set('artist', artist.toLowerCase());
+                            return newParams;
+                        });
+                    }
+                }
+            }else if (command === "playlist") {
+                const playlist = text.split(" ")[2];
+                if (playlist) {
+                    if (playlist === "reset") {
+                        setParams(prev => {
+                            const newParams = new URLSearchParams(prev);
+                            newParams.delete('playlist');
+                            return newParams;
+                        })
+                    }else{
+                        setParams(prev => {
+                            const newParams = new URLSearchParams(prev);
+                            newParams.set('playlist', playlist);
+                            return newParams;
+                        });
+                    }
+                }
+            }else if (command === "reset") {
+                setParams(prev => {
+                    const newParams = new URLSearchParams(prev);
+                    newParams.delete('artist');
+                    newParams.delete('playlist');
+                    return newParams;
+                })
+            }
         }
     }, [text, setParams]);
     if (text === "neofetch") {
@@ -249,7 +293,59 @@ const Output = ({text}) => {
             }
         }
     }else if (text.startsWith("music")) {
-
+        const command = text.split(" ")[1];
+        if (command === "artist") {
+            const artist = text.split(" ").slice(2).join(" ");
+            if (artist) {
+                if (artist === "reset") {
+                    return (
+                        <div className="terminal">
+                            <p>Artist reset.</p>
+                        </div>
+                    )
+                }
+                return (
+                    <div className="terminal">
+                        <p>Artist set to {artist}.</p>
+                    </div>
+                )
+            } else {
+                return (
+                    <div className="terminal">
+                        <p>Please specify an artist, eg. Laufey</p>
+                    </div>
+                )
+            }
+        }else if (command === "playlist") {
+            const playlist = text.split(" ")[2];
+            if (playlist) {
+                if (playlist === "reset") {
+                    return (
+                        <div className="terminal">
+                            <p>Playlist reset.</p>
+                        </div>
+                    )
+                }
+                return (
+                    <div className="terminal">
+                        <p>Playlist set.</p>
+                    </div>
+                )
+            }else{
+                return (
+                    <div className="terminal">
+                        <p>Please specify a playlist.</p>
+                    </div>
+                )
+            }
+        }else if (command === "reset") {
+            return (
+                <div className="terminal">
+                    <p>Music reset.</p>
+                </div>
+            )
+        }
+        
     } else if (text.trim() === "") {
         return null;
     } else {
