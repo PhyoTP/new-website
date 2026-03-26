@@ -1,11 +1,11 @@
 import {useEffect, useRef, useState, useCallback, useMemo} from 'react';
 import Case from "../assets/case.svg";
 import Dial from "../assets/dial.svg";
-import {animate} from "animejs";
+import {animate, set} from "animejs";
 import useSWR from "swr";
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
-export default function Buds({listId}) {
+export default function Buds({listId, setLyric}) {
     const playerRef = useRef(null);
     const [ready, setReady] = useState(false);
     const [isPlaying, setIsPlaying] = useState(false);
@@ -333,6 +333,7 @@ export default function Buds({listId}) {
                             console.log([m * 60 + s, currentTime])
                             return m * 60 + s > currentTime;
                         })-1;
+                        setLyric(lyrics[1][index] || "");
                         return index !== -1 ? <p>Lyrics: {lyrics[1][index]}</p> : null;
                     })()}
                 </div>

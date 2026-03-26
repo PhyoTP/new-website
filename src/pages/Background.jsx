@@ -1,6 +1,7 @@
 import React, {useRef, useEffect, useState} from "react";
+import {FiChevronLeft, FiChevronRight} from "react-icons/fi";
 
-const Background = ({intensity = 80, image = null, time}) => {
+const Background = ({intensity = 80, image = null, time, currentLyric}) => {
     const canvasRef = useRef(null);
     const startRef = useRef(null);
     const dropsRef = useRef([]);
@@ -11,7 +12,7 @@ const Background = ({intensity = 80, image = null, time}) => {
         if (startRef.current) {
             let imNum = Math.floor(Math.random() * photosCount[time]) + 1
             setImageNum(imNum);
-            startRef.current.style.backgroundImage = `url(${image || `/assets/photos/${time}/${imNum}.jpg`})`;
+            startRef.current.style.backgroundImage = `url(${image || `/assets/photos/${time}/${imNum}.avif`})`;
         }
         console.log(image)
     }, [time]);
@@ -89,7 +90,26 @@ const Background = ({intensity = 80, image = null, time}) => {
     return (
         <div>
             <section id="start" ref={startRef} className="imageText">
-                {/*<button><h1>{"<"}</h1></button><button><h1>{">"}</h1></button>*/}
+                <div style={{zIndex: 10}}>
+                    <button onClick={()=>{
+                        setImageNum(prev => {
+                            let newNum = prev - 1;
+                            if (newNum < 1) newNum = photosCount[time];
+                            startRef.current.style.backgroundImage = `url(${image || `/assets/photos/${time}/${newNum}.avif`})`;
+                            return newNum;
+                        })
+                    }}><FiChevronLeft className="icon" /></button>
+                    <button onClick={()=>{
+                        setImageNum(prev => {
+                            let newNum = prev + 1;
+                            if (newNum > photosCount[time]) newNum = 1;
+                            startRef.current.style.backgroundImage = `url(${image || `/assets/photos/${time}/${newNum}.avif`})`;
+                            return newNum;
+                        })
+                    }}><FiChevronRight className="icon" /></button>
+                </div>
+                <p className="lyric">{currentLyric}</p>
+                
             </section>
             <canvas id="rain" ref={canvasRef}/>
         </div>

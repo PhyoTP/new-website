@@ -7,7 +7,23 @@ import {FiCloudOff, FiCloudRain} from "react-icons/fi";
 import Buds from "./Buds";
 import {animate} from "animejs";
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
-
+export const playlists = {
+        "minecraft": {
+            "morning": "PLX9tuOzNhuWMWTY7x4FtB7tDACYjLRkrs",
+            "afternoon": "PLX9tuOzNhuWM2w1_yK0fSTrIqQrke61Ac",
+            "evening": "PLX9tuOzNhuWOAtTdn8YcR2kTILtcSfQ71",
+            "night": "PLX9tuOzNhuWNYt90Z3N8xqHwHlrgDh_xf",
+            "dark": "PLX9tuOzNhuWPvfNEpgeBD4UBCNAKPXJ9h"
+        },
+        "laufey": "PLX9tuOzNhuWNWtj0tWOLJ-1uKBI5inI_-",
+        "yung kai":{
+            "morning": "PLX9tuOzNhuWNT4sS1r99XEolSrlkPdNTY",
+            "afternoon": "PLX9tuOzNhuWN6X61zppWrae_xMLk21YHc",
+            "evening": "PLX9tuOzNhuWNUzZdrpj4RPslmLIp1O5c5",
+            "night": "PLX9tuOzNhuWNyYibO1fQYJH0ecjH7qZ1-",
+            "dark": "PLX9tuOzNhuWOmx85j70EN7ym4iYcga-2y"
+        }
+    };
 const Layout = () => {
     const [urlParams, setParams] = useSearchParams();
     const clock = useRef();
@@ -192,23 +208,7 @@ const Layout = () => {
             document.cookie = "theme=dark; path=/";
         }
     }
-    const playlists = {
-        "minecraft": {
-            "morning": "PLX9tuOzNhuWMWTY7x4FtB7tDACYjLRkrs",
-            "afternoon": "PLX9tuOzNhuWM2w1_yK0fSTrIqQrke61Ac",
-            "evening": "PLX9tuOzNhuWOAtTdn8YcR2kTILtcSfQ71",
-            "night": "PLX9tuOzNhuWNYt90Z3N8xqHwHlrgDh_xf",
-            "dark": "PLX9tuOzNhuWPvfNEpgeBD4UBCNAKPXJ9h"
-        },
-        "laufey": "PLX9tuOzNhuWNWtj0tWOLJ-1uKBI5inI_-",
-        "yung kai":{
-            "morning": "PLX9tuOzNhuWNT4sS1r99XEolSrlkPdNTY",
-            "afternoon": "PLX9tuOzNhuWN6X61zppWrae_xMLk21YHc",
-            "evening": "PLX9tuOzNhuWNUzZdrpj4RPslmLIp1O5c5",
-            "night": "PLX9tuOzNhuWNyYibO1fQYJH0ecjH7qZ1-",
-            "dark": "PLX9tuOzNhuWOmx85j70EN7ym4iYcga-2y"
-        }
-    }
+    const [currentLyric, setCurrentLyric] = useState("");
     return (
         <>
 
@@ -229,13 +229,12 @@ const Layout = () => {
                             <p>Woodlands, Singapore</p>
                         </div>
                         <button onClick={toggleRain}>{
-                            intensity > 0 ? <FiCloudRain className="icon"/> : <FiCloudOff className="icon"/>
+                            intensity > 0 ? <FiCloudRain className="icon header-icon"/> : <FiCloudOff className="icon header-icon"/>
                         }</button>
                     </>
                 )}
             </header>
-            <Background intensity={intensity}
-                        time={currentTime}/>
+            <Background intensity={intensity} time={currentTime} currentLyric={currentLyric}/>
             <Outlet/>
             <footer>
                 <p>this is a work in progress</p>
@@ -246,7 +245,7 @@ const Layout = () => {
                     <a href="https://bit.ly/ScootPlayz">My YouTube channel</a>
                 </nav>
                 <hr/>
-                <Buds listId={urlParams.get("playlist") || playlists[artist][currentTime] || playlists[artist]}/>
+                <Buds listId={urlParams.get("playlist") || playlists[artist]?.[currentTime] || playlists[artist] || playlists["minecraft"][currentTime]} setLyric={setCurrentLyric}/>
                 <hr/>
                 <p>by the way you see that {currentTheme === "dark" ? "moon" : "sun"} thing in the top left corner,
                     that's a theme switcher you should try clicking on it</p>
@@ -254,18 +253,8 @@ const Layout = () => {
                     <p>and also the clouds in the right hand corner toggle rain (if its affecting performance)</p>
                 )}
                 <hr/>
-                <h2>some more stuff you could change about this website:</h2>
-                <br/>
-                <label htmlFor="playlistChange">Set a YouTube playlist:</label>
-                <input id="playlistChange"/>
-                <input type="submit" value="Change" onClick={() => {
-                    const newList = document.getElementById("playlistChange").value;
-                    setParams(prev => {
-                        const newParams = new URLSearchParams(prev);
-                        newParams.set('playlist', newList);
-                        return newParams;
-                    });
-                }}/>
+                {/* <h2>some more stuff you could change about this website:</h2>
+                <br/> */}
 
                 <iframe id="bucket-webring" style={{"width": "70%", "height": "3rem", "border": "none", "display": "block"}}
                             src={`https://webring.bucketfish.me/embed.html?name=PhyoTP${currentTheme === "light" && "&lightmode=true"}`} />

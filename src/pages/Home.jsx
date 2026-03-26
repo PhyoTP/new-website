@@ -1,6 +1,7 @@
 import {useEffect, useState, useRef} from "react";
 import {useSearchParams} from "react-router-dom";
-import me from "../assets/me.png";
+import me from "../assets/me.avif";
+import { playlists } from "./Layout";
 
 const Home = () => {
     const [index, setIndex] = useState(0);
@@ -190,6 +191,9 @@ const Output = ({text}) => {
                 <p><b>frameworks</b> - Frameworks I know</p>
                 <p><b>time set [time]</b> - Change time of day on this website, run without to see default options</p>
                 <p><b>weather rain [intensity]</b> - Change rain intensity</p>
+                <p><b>music artist [artist]</b> - Set music artist, run without to see default options</p>
+                <p><b>music playlist [playlist]</b> - Set music playlist (from YouTube)</p>
+                <p><b>music reset</b> - Reset music to default</p>
             </div>
         )
     }
@@ -262,7 +266,7 @@ const Output = ({text}) => {
                                 newParams.set('time', time);
                                 return newParams;
                             });
-                        }}>{time.charAt(0).toUpperCase() + time.slice(1)}</a>
+                        }} style={{textTransform: 'capitalize'}}>{time}</a>
                     ))}
                     <a onClick={() => {
                         setParams(prev => {
@@ -296,23 +300,43 @@ const Output = ({text}) => {
         const command = text.split(" ")[1];
         if (command === "artist") {
             const artist = text.split(" ").slice(2).join(" ");
-            if (artist) {
-                if (artist === "reset") {
-                    return (
-                        <div className="terminal">
-                            <p>Artist reset.</p>
-                        </div>
-                    )
-                }
+            if (Object.hasOwn(playlists, artist.toLowerCase())) {
                 return (
                     <div className="terminal">
                         <p>Artist set to {artist}.</p>
                     </div>
                 )
+            } else if (artist === "reset") {
+                return (
+                    <div className="terminal">
+                        <p>Artist reset.</p>
+                    </div>
+                )
+            }else if (artist === "") {
+                return (
+                    <nav>
+                        {Object.keys(playlists).map(artist => (
+                            <a onClick={() => {
+                                setParams(prev => {
+                                    const newParams = new URLSearchParams(prev);
+                                    newParams.set('artist', artist);
+                                    return newParams;
+                                });
+                            }} style={{textTransform: 'capitalize'}}>{artist}</a>
+                        ))}
+                        <a onClick={() => {
+                            setParams(prev => {
+                                const newParams = new URLSearchParams(prev);
+                                newParams.delete('artist');
+                                return newParams;
+                            });
+                        }}>Reset</a>
+                    </nav>
+                )
             } else {
                 return (
                     <div className="terminal">
-                        <p>Please specify an artist, eg. Laufey</p>
+                        <p>Specified artist not found. Please specify an artist, eg. [{Object.keys(playlists).join("/")}]</p>
                     </div>
                 )
             }
