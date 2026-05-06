@@ -15,7 +15,7 @@ export const playlists = {
             "night": "PLX9tuOzNhuWNYt90Z3N8xqHwHlrgDh_xf",
             "dark": "PLX9tuOzNhuWPvfNEpgeBD4UBCNAKPXJ9h"
         },
-        "laufey": "PLX9tuOzNhuWNWtj0tWOLJ-1uKBI5inI_-",
+        "laufey": "PLX9tuOzNhuWMmsEVB3ER3QlzWAhPZhlRO",
         "yung kai":{
             "morning": "PLX9tuOzNhuWNT4sS1r99XEolSrlkPdNTY",
             "afternoon": "PLX9tuOzNhuWN6X61zppWrae_xMLk21YHc",

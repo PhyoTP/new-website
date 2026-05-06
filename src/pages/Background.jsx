@@ -1,5 +1,5 @@
 import React, {useRef, useEffect, useState} from "react";
-import {FiChevronLeft, FiChevronRight} from "react-icons/fi";
+import {FiChevronLeft, FiChevronRight, FiMusic} from "react-icons/fi";
 
 const Background = ({intensity = 80, image = null, time, currentLyric}) => {
     const canvasRef = useRef(null);
@@ -7,6 +7,9 @@ const Background = ({intensity = 80, image = null, time, currentLyric}) => {
     const dropsRef = useRef([]);
     const animationFrameRef = useRef(null);
     const [ imageNum, setImageNum ] = useState(0);
+    const [ pastLyric, setPastLyric ] = useState("");
+    const currentRef = useRef();
+    const pastRef = useRef();
     useEffect(() => {
         // Set the background image for the start section
         if (startRef.current) {
@@ -80,6 +83,17 @@ const Background = ({intensity = 80, image = null, time, currentLyric}) => {
             cancelAnimationFrame(animationFrameRef.current);
         }
     }, [intensity]);
+    useEffect(()=>{
+            pastRef.current.style.animation = "fadeOut 0.5s";
+            currentRef.current.style.animation = "fadeIn 0.5s";
+            const timeout = setTimeout(() => {
+                setPastLyric(currentLyric);
+                pastRef.current.style.animation = "";
+                currentRef.current.style.animation = "";
+            }, 500);
+            return () => clearTimeout(timeout);
+        
+    }, [currentLyric])
     const photosCount = {
         "morning": 10,
         "afternoon": 4,
@@ -108,8 +122,13 @@ const Background = ({intensity = 80, image = null, time, currentLyric}) => {
                         })
                     }}><FiChevronRight className="icon" /></button>
                 </div>
-                <p className="lyric">{currentLyric}</p>
+                <div id="lyrics">
                 
+                <p className="lyric" ref={pastRef}>{ pastLyric.length == 0 ?
+                <FiMusic className="icon" /> : pastLyric
+                }</p>
+                <p className="lyric" ref={currentRef}>{currentLyric}</p>
+                </div>
             </section>
             <canvas id="rain" ref={canvasRef}/>
         </div>

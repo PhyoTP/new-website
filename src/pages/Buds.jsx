@@ -250,7 +250,6 @@ export default function Buds({listId, setLyric}) {
         return title
             .replace(/\(?official.*\)/i, "")
             .replace(/\(?lyric.*\)/i, "")
-            .replace("-", "")
             .trim()
     }
     const artist = useMemo(()=>{
