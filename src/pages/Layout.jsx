@@ -2,19 +2,19 @@ import {Outlet, useSearchParams} from "react-router-dom";
 import "./styles.css";
 import Background from "./Background";
 import useSWR from "swr";
-import {useEffect, useState, useRef} from "react";
+import {useEffect, useState, useRef, useMemo} from "react";
 import {FiCloudOff, FiCloudRain} from "react-icons/fi";
 import Buds from "./Buds";
 import {animate} from "animejs";
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 export const playlists = {
-        "minecraft": {
-            "morning": "PLX9tuOzNhuWMWTY7x4FtB7tDACYjLRkrs",
-            "afternoon": "PLX9tuOzNhuWM2w1_yK0fSTrIqQrke61Ac",
-            "evening": "PLX9tuOzNhuWOAtTdn8YcR2kTILtcSfQ71",
-            "night": "PLX9tuOzNhuWNYt90Z3N8xqHwHlrgDh_xf",
-            "dark": "PLX9tuOzNhuWPvfNEpgeBD4UBCNAKPXJ9h"
-        },
+        // "minecraft": {
+        //     "morning": "PLX9tuOzNhuWMWTY7x4FtB7tDACYjLRkrs",
+        //     "afternoon": "PLX9tuOzNhuWM2w1_yK0fSTrIqQrke61Ac",
+        //     "evening": "PLX9tuOzNhuWOAtTdn8YcR2kTILtcSfQ71",
+        //     "night": "PLX9tuOzNhuWNYt90Z3N8xqHwHlrgDh_xf",
+        //     "dark": "PLX9tuOzNhuWPvfNEpgeBD4UBCNAKPXJ9h"
+        // },
         "laufey": "PLX9tuOzNhuWMmsEVB3ER3QlzWAhPZhlRO",
         "yung kai":{
             "morning": "PLX9tuOzNhuWNT4sS1r99XEolSrlkPdNTY",
@@ -209,6 +209,16 @@ const Layout = () => {
         }
     }
     const [currentLyric, setCurrentLyric] = useState("");
+    const randomPlaylist = useMemo(() => {
+        const artists = Object.keys(playlists);
+        const randomArtist = artists[Math.floor(Math.random() * artists.length)];
+        if (playlists[randomArtist][currentTime]) {
+            return playlists[randomArtist][currentTime];
+        } else {
+            return playlists[randomArtist];
+        }
+
+    }, [currentTime]);
     return (
         <>
 
@@ -245,7 +255,7 @@ const Layout = () => {
                     <a href="https://bit.ly/ScootPlayz">My YouTube channel</a>
                 </nav>
                 <hr/>
-                <Buds listId={urlParams.get("playlist") || playlists[artist]?.[currentTime] || playlists[artist] || playlists["minecraft"][currentTime]} setLyric={setCurrentLyric}/>
+                <Buds listId={urlParams.get("playlist") || playlists[artist]?.[currentTime] || playlists[artist] || randomPlaylist} setLyric={setCurrentLyric}/>
                 <hr/>
                 <p>by the way you see that {currentTheme === "dark" ? "moon" : "sun"} thing in the top left corner,
                     that's a theme switcher you should try clicking on it</p>

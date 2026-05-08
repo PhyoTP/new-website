@@ -95,10 +95,10 @@ const Background = ({intensity = 80, image = null, time, currentLyric}) => {
         
     }, [currentLyric])
     const photosCount = {
-        "morning": 10,
+        "morning": 11,
         "afternoon": 4,
         "evening": 5,
-        "night": 6,
+        "night": 7,
         "dark": 3
     }
     return (
