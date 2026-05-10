@@ -329,7 +329,6 @@ export default function Buds({listId, setLyric}) {
 
                         const index = lyrics[0].findIndex(time => {
                             const [m, s] = time.split(":").map(Number);
-                            console.log([m * 60 + s, currentTime])
                             return m * 60 + s > currentTime;
                         })-1;
                         setLyric(lyrics[1][index] || "");

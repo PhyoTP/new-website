@@ -22,7 +22,8 @@ export const playlists = {
             "evening": "PLX9tuOzNhuWNUzZdrpj4RPslmLIp1O5c5",
             "night": "PLX9tuOzNhuWNyYibO1fQYJH0ecjH7qZ1-",
             "dark": "PLX9tuOzNhuWOmx85j70EN7ym4iYcga-2y"
-        }
+        },
+        "the marias": "OLAK5uy_lZXfcfhqfJoIgF8GzfnvtIoy6RR_Zaq3Q"
     };
 const Layout = () => {
     const [urlParams, setParams] = useSearchParams();
@@ -91,6 +92,7 @@ const Layout = () => {
 
 
     const {data} = useSWR("https://api-open.data.gov.sg/v2/real-time/api/two-hr-forecast", fetcher);
+    const [forecast, setForecast] = useState("Loading...");
     const [intensity, setIntensity] = useState(0);
     const [checkWeather, setCheck] = useState(0);
     useEffect(() => {
@@ -101,9 +103,10 @@ const Layout = () => {
                 console.log(rain);
                 setArtist("laufey")
             }
-        } else if (data) {
-            const forecast = data.data.items[0].forecasts[45].forecast;
-            switch (forecast) {
+        } else if (data?.data?.items?.[0]?.forecasts?.[45]?.forecast) {
+            const fetchedForecast = data.data.items[0].forecasts[45].forecast;
+            setForecast(fetchedForecast);
+            switch (fetchedForecast) {
                 case "Light Showers":
                     setIntensity(50);
                     break;
@@ -135,6 +138,8 @@ const Layout = () => {
                     setIntensity(1000);
                     break;
             }
+        }else{
+            setForecast("check outside");
         }
         if (intensity > 0){
             console.log(intensity);
@@ -235,7 +240,7 @@ const Layout = () => {
                 {data && (
                     <>
                         <div className="header imageText" ref={cloudRef2}>
-                            <h1>{data.data.items[0].forecasts[45].forecast}</h1>
+                            <h1>{forecast}</h1>
                             <p>Woodlands, Singapore</p>
                         </div>
                         <button onClick={toggleRain}>{
