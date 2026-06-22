@@ -8,7 +8,9 @@ const Home = () => {
     const [text, setText] = useState("");
     const inputRef = useRef(null);
     const [urlParams] = useSearchParams();
-
+    const [history, setHistory] = useState(["neofetch"]);
+    const [commandIndex, setCIndex] = useState(1);
+    const [trueText, setTtext] = useState("");
     useEffect(() => {
         if (!urlParams.get("command")) {
             const interval = setInterval(() => {
@@ -19,7 +21,6 @@ const Home = () => {
                     clearInterval(interval);
                 }
             }, 200);
-
             return () => clearInterval(interval); // cleanup
         } else {
             setText(urlParams.get("command"));
@@ -38,9 +39,38 @@ const Home = () => {
                     <Output text={text}/>
                     <p className="terminal"><b>phyotp.dev</b>:~$ <input type="text" ref={inputRef} onKeyDown={(e) => {
                         if (e.key === "Enter") {
+                            const curCom = inputRef.current.value;
+                            setHistory(prev => [...prev, curCom]);
                             setText(inputRef.current.value);
+                            console.log(inputRef.current.value);
+                            console.log(history);
                             inputRef.current.value = "";
+                            setCIndex(history.length+1);
+                            setTtext("");
+                        }else if (e.key === "ArrowUp") {
+                            e.preventDefault();
+
+                            if (commandIndex === history.length) {
+                                setTtext(inputRef.current.value);
+                            }
+
+                            if (commandIndex > 0) {
+                                const newI = commandIndex - 1;
+                                setCIndex(newI);
+                                inputRef.current.value = history[newI];
+                            }
+                        }else if (e.key === "ArrowDown"){
+                            e.preventDefault()
+                            if (commandIndex < history.length-1){
+                                const newI = commandIndex+1;
+                                setCIndex(newI);
+                                inputRef.current.value = history[newI];
+                            }else{
+                                inputRef.current.value = trueText;
+                                setCIndex(history.length);
+                            }
                         }
+                        
                     }}/></p>
                 </>
             )}
@@ -296,7 +326,8 @@ const Output = ({text}) => {
                 )
             }
         }
-    }else if (text.startsWith("music")) {
+    }
+    else if (text.startsWith("music")) {
         const command = text.split(" ")[1];
         if (command === "artist") {
             const artist = text.split(" ").slice(2).join(" ");
@@ -370,7 +401,8 @@ const Output = ({text}) => {
             )
         }
         
-    } else if (text.trim() === "") {
+    } 
+    else if (text.trim() === "") {
         return null;
     } else {
         return (
