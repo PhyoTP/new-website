@@ -1,7 +1,7 @@
 import {useEffect, useRef, useState, useCallback, useMemo} from 'react';
 import Case from "../assets/case.svg";
 import Dial from "../assets/dial.svg";
-import {animate, set} from "animejs";
+import {animate} from "animejs";
 import useSWR from "swr";
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
@@ -42,16 +42,19 @@ export default function Buds({listId, setLyric}) {
     }, [ready]);
 
     const play = useCallback(() => {
-        if (playerRef.current && ready) {
+        if (playerRef.current && ready && containerRef) {
             playerRef.current.playVideo();
             setIsPlaying(true);
+            containerRef.current.style.animationPlayState = "running";
         }
     }, [ready]);
 
     const pause = useCallback(() => {
-        if (playerRef.current && ready) {
+        if (playerRef.current && ready && containerRef) {
             playerRef.current.pauseVideo();
             setIsPlaying(false);
+            containerRef.current.style.animationPlayState = "paused";
+
         }
     }, [ready]);
     const next = useCallback(() => {
@@ -136,6 +139,11 @@ export default function Buds({listId, setLyric}) {
 
 
         const handleClick = () => {
+            if (dragged.current){
+                dragged.current = false;
+                console.log("not dragged")
+                return;
+            };
             playerRef.current.height = "1";
             dial.style.animation = "click 0.1s";
             setTimeout(() => {
@@ -280,12 +288,42 @@ export default function Buds({listId, setLyric}) {
         const verses = lines.map(line => line.split("]")[1].trim());
         return [times, verses];
     },[lyricData])
+    const mouseDown = useRef(false);
+    const [holdingMouse, setHMouse] = useState(false);
+    const offset = useRef({ x: 0, y: 0 });
+    const holdTimeout = useRef();
+    const dragged = useRef(false);
+    const containerRef = useRef(null);
     return (
         <div>
 
-            <div id="buds" ref={budsRef} onClick={()=>console.log("Buds")}>
-                <div id="yt-player"></div>
-                <img src={Case} id="case" />
+            <div id="buds" ref={budsRef} onMouseDown={e=>{
+                mouseDown.current = true;
+                const rect = budsRef.current.getBoundingClientRect();
+                offset.current = {
+                    x: e.clientX - rect.left,
+                    y: e.clientY - rect.top,
+                };
+                holdTimeout.current = setTimeout(()=>{
+                    if (mouseDown.current){
+                        budsRef.current.style.cursor = "grab";
+                        setHMouse(true);
+                        dragged.current = true;
+                        console.log("Holding mouse");
+                    }
+                },500);
+            }} onMouseUp={()=>{
+                mouseDown.current = false;
+                setHMouse(false);
+                budsRef.current.style.cursor = "pointer";
+                clearTimeout(holdTimeout.current);
+            }} onMouseMove={e=>{
+                if (holdingMouse){
+                    budsRef.current.style.left = (e.clientX - offset.current.x) + "px";
+                    budsRef.current.style.top  = (e.clientY - offset.current.y) + "px";
+                }
+            }}>
+                <img src={Case} id="case" draggable={false} />
                 <div id="budsInfo">
                     <img src={Dial} id="dial" ref={dialRef} />
                     {ready ? (
@@ -300,42 +338,52 @@ export default function Buds({listId, setLyric}) {
             </div>
             <h2>Buds</h2>
             <p>Based on the <a href="https://sg.nothing.tech/products/cmf-buds-pro-2?Colour=Orange">CMF Buds Pro 2</a> that I have (not sponsored, just a fan)</p>
-            {ready ? (
-                <div>
-                    <p>Click to play/pause, scroll to adjust volume</p>
-                    <p>Double click to next video, triple click to the video before</p>
-                    <input
-                        style={{width:'40%', minWidth:'130px'}}
-                        type="range"
-                        min="0"
-                        max="100"
-                        value={progress}
-                        onChange={(e) => {
-                            const percent = parseFloat(e.target.value);
-                            const duration = playerRef.current?.getDuration?.();
-                            if (duration) {
-                            const seekTo = (percent / 100) * duration;
-                            playerRef.current?.seekTo(seekTo, true);
-                            setProgress(percent);
-                            }
-                        }}
-                    />
-                    <p>{Math.floor(progress/100*playerRef.current?.getDuration?.()/60)}:{Math.floor(progress/100*playerRef.current?.getDuration?.()%60) < 10 && "0"}{Math.floor(progress/100*playerRef.current?.getDuration?.()%60)} / {Math.floor(playerRef.current?.getDuration?.()/60)}:{Math.floor(playerRef.current?.getDuration?.()%60) < 10 && "0"}{Math.floor(playerRef.current?.getDuration?.()%60)}</p>
-                    {lyrics && (() => {
-                        const duration = playerRef.current?.getDuration?.();
-                        if (!duration) return null;
-
-                        const currentTime = (progress / 100) * duration;
-
-                        const index = lyrics[0].findIndex(time => {
-                            const [m, s] = time.split(":").map(Number);
-                            return m * 60 + s > currentTime;
-                        })-1;
-                        setLyric(lyrics[1][index] || "");
-                        return index !== -1 ? <p>Lyrics: {lyrics[1][index]}</p> : null;
-                    })()}
+            <div id="buds-section">
+                <div id="player-container" ref={containerRef}>
+                    <span id="player-cover">
+                        <span id="player-center"></span>
+                    </span>
+                    <div id="yt-player"></div>
                 </div>
-            ) : <p>Loading...</p>}
+                {ready ? (
+                    <div>
+
+                        <p>Click to play/pause, scroll to adjust volume</p>
+                        <p>Double click to next video, triple click to the video before</p>
+                        <p>Hold to move</p>
+                        <input
+                            style={{width:'40%', minWidth:'130px'}}
+                            type="range"
+                            min="0"
+                            max="100"
+                            value={progress}
+                            onChange={(e) => {
+                                const percent = parseFloat(e.target.value);
+                                const duration = playerRef.current?.getDuration?.();
+                                if (duration) {
+                                const seekTo = (percent / 100) * duration;
+                                playerRef.current?.seekTo(seekTo, true);
+                                setProgress(percent);
+                                }
+                            }}
+                        />
+                        <p>{Math.floor(progress/100*playerRef.current?.getDuration?.()/60)}:{Math.floor(progress/100*playerRef.current?.getDuration?.()%60) < 10 && "0"}{Math.floor(progress/100*playerRef.current?.getDuration?.()%60)} / {Math.floor(playerRef.current?.getDuration?.()/60)}:{Math.floor(playerRef.current?.getDuration?.()%60) < 10 && "0"}{Math.floor(playerRef.current?.getDuration?.()%60)}</p>
+                        {lyrics && (() => {
+                            const duration = playerRef.current?.getDuration?.();
+                            if (!duration) return null;
+
+                            const currentTime = (progress / 100) * duration;
+
+                            const index = lyrics[0].findIndex(time => {
+                                const [m, s] = time.split(":").map(Number);
+                                return m * 60 + s > currentTime;
+                            })-1;
+                            setLyric(lyrics[1][index] || "");
+                            return index !== -1 ? <p>Lyrics: {lyrics[1][index]}</p> : null;
+                        })()}
+                    </div>
+                ) : <p>Loading...</p>}
+            </div>
         </div>
     );
 }

@@ -225,12 +225,50 @@ header * {
 
 /* earbuds */
 #yt-player {
-  position: absolute;
-  width: 100%;
+  touch-action: none;
+  user-select: none;
+  flex: 0 0 auto;
   height: 100%;
-  z-index: -2;
+  width: auto;
+  aspect-ratio: 1;
 }
-
+#player-cover {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  display: block;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#player-container {
+  height: 100%;
+  border-radius: 100%;
+  overflow: hidden;
+  animation: spin 20s linear infinite;
+  animation-play-state: paused;
+  border: #000 solid 0.5em;
+}
+#player-center{
+  width: 3em;
+  height: 3em;
+  background-color: var(--footer);
+  border: #fff solid 0.5em;
+  border-radius: 100%;
+}
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+#buds-section{
+  display: flex;
+  gap: 2em;
+}
 #buds {
   --rs: calc(30vmin / 1460);
   height: 30vmin;
@@ -244,6 +282,7 @@ header * {
   touch-action: none;
   user-select: none;
   cursor: pointer;
+  z-index: 10;
 }
 
 #case {
