@@ -229,14 +229,12 @@ header * {
   user-select: none;
   flex: 0 0 auto;
   height: 100%;
-  width: auto;
+  width: 100%;
   aspect-ratio: 1;
 }
 #player-cover {
   width: 100%;
-  height: auto;
-  aspect-ratio: 1;
-  display: block;
+  height: 100%;
   position: absolute;
   display: flex;
   justify-content: center;
@@ -244,10 +242,10 @@ header * {
 }
 #player-container {
   height: 100%;
+  aspect-ratio: 1;
   border-radius: 100%;
   overflow: hidden;
   animation: spin 20s linear infinite;
-  animation-play-state: paused;
   border: #000 solid 0.5em;
 }
 #player-center{

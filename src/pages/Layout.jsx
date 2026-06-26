@@ -260,7 +260,7 @@ const Layout = () => {
                     <a href="https://bit.ly/ScootPlayz">My YouTube channel</a>
                 </nav>
                 <hr/>
-                <Buds listId={urlParams.get("playlist") || playlists[artist]?.[currentTime] || playlists[artist] || randomPlaylist} setLyric={setCurrentLyric}/>
+                <Buds listId={urlParams.get("playlist") || playlists[artist]?.[currentTime] || playlists[artist] || randomPlaylist} setLyric={setCurrentLyric} lyric={currentLyric}/>
                 <hr/>
                 <p>by the way you see that {currentTheme === "dark" ? "moon" : "sun"} thing in the top left corner,
                     that's a theme switcher you should try clicking on it</p>

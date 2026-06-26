@@ -5,7 +5,7 @@ import {animate} from "animejs";
 import useSWR from "swr";
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
-export default function Buds({listId, setLyric}) {
+export default function Buds({listId, setLyric, lyric}) {
     const playerRef = useRef(null);
     const [ready, setReady] = useState(false);
     const [isPlaying, setIsPlaying] = useState(false);
@@ -45,7 +45,6 @@ export default function Buds({listId, setLyric}) {
         if (playerRef.current && ready && containerRef) {
             playerRef.current.playVideo();
             setIsPlaying(true);
-            containerRef.current.style.animationPlayState = "running";
         }
     }, [ready]);
 
@@ -53,7 +52,6 @@ export default function Buds({listId, setLyric}) {
         if (playerRef.current && ready && containerRef) {
             playerRef.current.pauseVideo();
             setIsPlaying(false);
-            containerRef.current.style.animationPlayState = "paused";
 
         }
     }, [ready]);
@@ -136,7 +134,11 @@ export default function Buds({listId, setLyric}) {
         let touchStartY = null;
 
         if (!dial || !buds) return;
-
+        if (isPlaying) {
+            containerRef.current.style.animationPlayState = "running";
+        } else {
+            containerRef.current.style.animationPlayState = "paused";
+        }
 
         const handleClick = () => {
             if (dragged.current){
@@ -278,22 +280,36 @@ export default function Buds({listId, setLyric}) {
         const pattern = artist.split("").join("\\s*");
         return new RegExp(pattern, "i");
     }
-    const {data: lyricData} = useSWR(currentTitle !== "" ? `https://lrclib.net/api/search?q=${encodeURIComponent(artist.trim())} ${encodeURIComponent(cleanTitle(currentTitle).replace(artistRegex(), "").trim())}` : null, fetcher);
+    const {data: strictLyricData, isLoading: strictLyricLoading} = useSWR(currentTitle !== "" ? `https://lrclib.net/api/search?artist_name=${encodeURIComponent(artist.trim())}&track_name=${encodeURIComponent(cleanTitle(currentTitle).replace(artistRegex(), "").trim())}` : null, fetcher)
+    const {data: lyricData, isLoading: lyricLoading} = useSWR(strictLyricData && strictLyricData.length == 0 ? `https://lrclib.net/api/search?q=${encodeURIComponent(artist.trim())} ${encodeURIComponent(cleanTitle(currentTitle).replace(artistRegex(), "").trim())}` : null, fetcher);
     const lyrics = useMemo(()=>{
-        if (!lyricData) return null;
-        const synced = lyricData.find(l => l.syncedLyrics)
+        if (!strictLyricData) return null;
+        console.log(strictLyricData)
+        if (strictLyricData == [] && !lyricData) return null;
+        console.log(lyricData)
+        const data = strictLyricData == [] ? lyricData : strictLyricData;
+        const synced = data.find(l => l.syncedLyrics)
         if (!synced) return null;
         const lines = synced.syncedLyrics.split("\n");
         const times = lines.map(line => line.split("]")[0].slice(1));
         const verses = lines.map(line => line.split("]")[1].trim());
         return [times, verses];
-    },[lyricData])
+    },[strictLyricData, lyricData])
     const mouseDown = useRef(false);
     const [holdingMouse, setHMouse] = useState(false);
     const offset = useRef({ x: 0, y: 0 });
     const holdTimeout = useRef();
     const dragged = useRef(false);
     const containerRef = useRef(null);
+    useEffect(()=>{
+        if (strictLyricLoading){
+            setLyric("Loading...")
+        }else if (lyricLoading){
+            setLyric("Still loading...")
+        }else{
+            setLyric("")
+        }
+    }, [strictLyricLoading, lyricLoading])
     return (
         <div>
 
@@ -368,7 +384,7 @@ export default function Buds({listId, setLyric}) {
                             }}
                         />
                         <p>{Math.floor(progress/100*playerRef.current?.getDuration?.()/60)}:{Math.floor(progress/100*playerRef.current?.getDuration?.()%60) < 10 && "0"}{Math.floor(progress/100*playerRef.current?.getDuration?.()%60)} / {Math.floor(playerRef.current?.getDuration?.()/60)}:{Math.floor(playerRef.current?.getDuration?.()%60) < 10 && "0"}{Math.floor(playerRef.current?.getDuration?.()%60)}</p>
-                        {lyrics && (() => {
+                        {lyrics ? (() => {
                             const duration = playerRef.current?.getDuration?.();
                             if (!duration) return null;
 
@@ -380,7 +396,7 @@ export default function Buds({listId, setLyric}) {
                             })-1;
                             setLyric(lyrics[1][index] || "");
                             return index !== -1 ? <p>Lyrics: {lyrics[1][index]}</p> : null;
-                        })()}
+                        })() : <p>{lyric}</p>}
                     </div>
                 ) : <p>Loading...</p>}
             </div>
