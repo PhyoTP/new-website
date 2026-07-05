@@ -104,6 +104,7 @@ export default function Buds({listId, setLyric, lyric}) {
                         // Shuffle playlist on ready
                         event.target.setShuffle(true);
                         event.target.nextVideo();
+                        console.log(playerRef.current.getPlaylist());
                     },
                     onStateChange: (event) => {
                         // Update playing state based on YouTube player state
@@ -281,12 +282,12 @@ export default function Buds({listId, setLyric, lyric}) {
         return new RegExp(pattern, "i");
     }
     const {data: strictLyricData, isLoading: strictLyricLoading} = useSWR(currentTitle !== "" ? `https://lrclib.net/api/search?artist_name=${encodeURIComponent(artist.trim())}&track_name=${encodeURIComponent(cleanTitle(currentTitle).replace(artistRegex(), "").trim())}` : null, fetcher)
-    const {data: lyricData, isLoading: lyricLoading} = useSWR(strictLyricData && strictLyricData.length == 0 ? `https://lrclib.net/api/search?q=${encodeURIComponent(artist.trim())} ${encodeURIComponent(cleanTitle(currentTitle).replace(artistRegex(), "").trim())}` : null, fetcher);
+    const {data: lyricData, isLoading: lyricLoading} = useSWR(strictLyricData && !strictLyricData.some(l => l.syncedLyrics) ? `https://lrclib.net/api/search?q=${encodeURIComponent(artist.trim())} ${encodeURIComponent(cleanTitle(currentTitle).replace(artistRegex(), "").trim())}` : null, fetcher);
     const lyrics = useMemo(()=>{
         if (!strictLyricData) return null;
-        console.log(strictLyricData)
+        if (!lyricData) console.log(strictLyricData)
         if (strictLyricData == [] && !lyricData) return null;
-        console.log(lyricData)
+        if (lyricData) console.log(lyricData)
         const data = strictLyricData == [] ? lyricData : strictLyricData;
         const synced = data.find(l => l.syncedLyrics)
         if (!synced) return null;
