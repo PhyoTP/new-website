@@ -3,7 +3,15 @@ import Case from "../assets/case.svg";
 import Dial from "../assets/dial.svg";
 import {animate} from "animejs";
 import useSWR from "swr";
-const fetcher = (...args) => fetch(...args).then((res) => res.json());
+const fetcher = async (url) => {
+    const res = await fetch(url);
+
+    if (!res.ok) {
+        throw new Error(`${res.status} ${res.statusText}`);
+    }
+
+    return res.json();
+};
 
 export default function Buds({listId, setLyric, lyric}) {
     const playerRef = useRef(null);
