@@ -301,7 +301,7 @@ export default function Buds({listId, setLyric, lyric}) {
         if (!synced) return null;
         const lines = synced.syncedLyrics.split("\n");
         const times = lines.map(line => line.split("]")[0].slice(1));
-        const verses = lines.map(line => line.split("]")[1].trim());
+        const verses = lines.map(line => line.split("]")[1]?.trim() || "");
         return [times, verses];
     },[strictLyricData, lyricData])
     const mouseDown = useRef(false);
