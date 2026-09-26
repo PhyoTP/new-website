@@ -7,6 +7,8 @@ import {FiCloudOff, FiCloudRain} from "react-icons/fi";
 import Buds from "./Buds";
 import {animate} from "animejs";
 import { Analytics } from "@vercel/analytics/react"
+import { ReactLenis, useLenis } from 'lenis/react'
+
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 export const playlists = {
         // "minecraft": {
@@ -228,6 +230,7 @@ const Layout = () => {
     return (
         <>
             <Analytics />
+            <ReactLenis root/>
             <header>
                 <label className="switch" aria-label="Change theme">
                     <input type="checkbox" checked={theme} onChange={toggleTheme}/>

@@ -322,7 +322,7 @@ export default function Buds({listId, setLyric, lyric}) {
     return (
         <div>
 
-            <div id="buds" ref={budsRef} onMouseDown={e=>{
+            <div id="buds" ref={budsRef} data-lenis-prevent onMouseDown={e=>{
                 mouseDown.current = true;
                 const rect = budsRef.current.getBoundingClientRect();
                 offset.current = {
